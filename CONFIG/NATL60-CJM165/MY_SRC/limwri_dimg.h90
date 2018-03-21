@@ -1,0 +1,382 @@
+SUBROUTINE lim_wri ( kindic )
+   !!----------------------------------------------------------------------
+   !! NEMO/LIM3 3.3 , UCL - NEMO Consortium (2010)
+   !! $Id: limwri_dimg.h90 3764 2013-01-23 14:33:04Z smasson $
+   !! Software governed by the CeCILL licence (NEMOGCM/NEMO_CeCILL.txt)
+   !!----------------------------------------------------------------------
+   !!-------------------------------------------------------------------
+   !!  This routine computes the average of some variables and write it
+   !!  on the ouput files.
+   !!  ATTENTION cette routine n'est valable que si le pas de temps est
+   !!  egale a une fraction entiere de 1 jours.
+   !!  Diff 1-D 3-D : suppress common also included in etat
+   !!                 suppress cmoymo 11-18
+   !!  modif : 03/06/98
+   !!-------------------------------------------------------------------
+   USE  diadimg, ONLY : dia_wri_dimg
+   USE lib_fortran    ! Fortran utilities (allows no signed zero when 'key_nosignedzero' defined)
+
+   INTEGER :: kindic
+   INTEGER :: ierr
+   REAL(wp),DIMENSION(1) ::   zdept
+
+   REAL(wp) ::   zsto, zsec, zjulian,zout
+   REAL(wp) ::   zindh,zinda,zindb, ztmu
+
+   REAL(wp), POINTER, DIMENSION(:,:,:) ::   zcmo
+   REAL(wp), POINTER, DIMENSION(:,:  ) ::   zfield
+
+   REAL(wp), POINTER, DIMENSION(:,:,:) ::    zoi, zei
+   REAL(wp), POINTER, DIMENSION(:,:,:) ::    zdummy
+
+   INTEGER, SAVE ::   nmoyice   !: counter for averaging
+   INTEGER, SAVE ::   nmoyicea   !: counter for averaging
+   INTEGER, SAVE ::   nwf       !: number of fields to write on disk
+   INTEGER, SAVE,DIMENSION (:), ALLOCATABLE  :: nsubindex   !: subindex to be saved
+   ! according to namelist
+
+   !  REAL(wp), SAVE, DIMENSION(jpi,jpj,jpnoumax) :: rcmoy
+   REAL(wp), SAVE, DIMENSION(:,:,:),   ALLOCATABLE :: rcmoy
+   REAL(wp), SAVE, DIMENSION(:,:,:,:), ALLOCATABLE :: rcmoya
+#if ! defined key_diainstant
+   LOGICAL, PARAMETER :: ll_dia_inst=.FALSE.      ! local logical variable 
+#else
+   LOGICAL, PARAMETER :: ll_dia_inst=.TRUE.
+#endif
+   INTEGER ::  ji, jj, jl, jf, jk, jvar,  ii   ! dummy loop indices and array index
+   INTEGER :: iyear, iday, imon ! 
+
+   CHARACTER(LEN=80) :: clname, cltext, clmode
+
+   !!-------------------------------------------------------------------
+   CALL wrk_alloc( jpi, jpj, zfield )
+   CALL wrk_alloc( jpi, jpj, jpnoumax, zcmo )
+   CALL wrk_alloc( jpi, jpj, jpl,  zoi, zei )
+   CALL wrk_alloc( jpi, jpj, 6*jpl, zdummy )
+
+   IF ( numit == nstart ) THEN 
+
+      ALLOCATE( rcmoy(jpi,jpj,jpnoumax), STAT=ierr )
+      IF( lk_mpp    )   CALL mpp_sum ( ierr )
+      IF( ierr /= 0 ) THEN
+         CALL ctl_stop( 'lim_wri : unable to allocate standard arrays' )   ;   RETURN
+      ENDIF
+      rcmoy(:,:,:) = 0._wp
+
+      CALL lim_wri_init 
+
+      IF ( add_diag_swi == 1 ) THEN
+         ALLOCATE( rcmoya(jpi,jpj,jpl,6), STAT=ierr )
+         IF( lk_mpp    )   CALL mpp_sum ( ierr )
+         IF( ierr /= 0 ) THEN
+            CALL ctl_stop( 'lim_wri : unable to allocate standard arrays (add diag)' )   ;   RETURN
+         ENDIF
+         rcmoya(:,:,:,:) = 0._wp
+      ENDIF
+
+      CALL lim_wri_init 
+
+      nwf = 0 
+      ii  = 0
+
+      IF (lwp ) THEN
+         WRITE(numout,*) 'lim_wri : Write ice outputs in dimg'
+         WRITE(numout,*) '~~~~~~~~'
+         WRITE(numout,*) '   According to namelist_ice, following fields saved:'
+         DO jf =1, noumef
+            IF (nc(jf) == 1 ) THEN
+               WRITE(numout,* ) '    -',titn(jf), nam(jf), uni(jf)
+            ENDIF
+         END DO
+      ENDIF
+
+      DO jf = 1, noumef
+         IF (nc(jf) == 1 ) nwf = nwf + 1
+      END DO
+
+      ALLOCATE( nsubindex (nwf) )
+
+      DO jf = 1, noumef
+         IF (nc(jf) == 1 ) THEN 
+            ii = ii +1 
+            nsubindex(ii) = jf
+         END IF
+      END DO
+
+      zsto     = rdt_ice
+      zout     = nwrite * rdt_ice / nn_fsbc
+      zsec     = 0.
+      zdept(1) = 0.
+      nmoyice  = 0
+
+   ENDIF
+
+   !  (1) : 2D ice field
+#if ! defined key_diainstant 
+   !-- cumulate instantaneous values
+   zcmo ( 1:jpi, 1:jpj, 1:jpnoumax ) = 0._wp
+
+   DO jl = 1, jpl
+      DO jj = 1, jpj
+         DO ji = 1, jpi
+            zindh  = MAX( zzero , SIGN( zone , vt_i(ji,jj) * at_i(ji,jj) - 0.10 ) )
+            zinda  = MAX( zzero , SIGN( zone , at_i(ji,jj) - 0.10 ) )
+            zcmo(ji,jj,17) = zcmo(ji,jj,17) + a_i(ji,jj,jl)*qsr_ice (ji,jj,jl)
+            zcmo(ji,jj,18) = zcmo(ji,jj,18) + a_i(ji,jj,jl)*qns_ice(ji,jj,jl)
+            zcmo(ji,jj,27) = zcmo(ji,jj,27) + t_su(ji,jj,jl)*a_i(ji,jj,jl)/MAX(at_i(ji,jj),epsi16)*zinda
+         END DO
+      END DO
+   END DO
+
+   CALL lim_var_bv
+
+   DO jj = 2 , jpjm1
+      DO ji = 2 , jpim1
+         zindh  = MAX( zzero , SIGN( zone , vt_i(ji,jj) * at_i(ji,jj) - 0.10 ) )
+         zinda  = MAX( zzero , SIGN( zone , at_i(ji,jj) - 0.10 ) )
+         zindb  = zindh * zinda
+
+         zcmo(ji,jj,1)  = at_i(ji,jj)
+         zcmo(ji,jj,2)  = vt_i(ji,jj) / MAX( at_i(ji,jj), epsi16 ) * zinda
+         zcmo(ji,jj,3)  = vt_s(ji,jj) / MAX( at_i(ji,jj), epsi16 ) * zinda
+         zcmo(ji,jj,4)  = diag_bot_gr(ji,jj) * 86400.0 * zinda    ! Bottom thermodynamic ice production
+         zcmo(ji,jj,5)  = diag_dyn_gr(ji,jj) * 86400.0 * zinda    ! Dynamic ice production (rid/raft)
+         zcmo(ji,jj,22) = diag_lat_gr(ji,jj) * 86400.0 * zinda    ! Lateral thermodynamic ice production
+         zcmo(ji,jj,23) = diag_sni_gr(ji,jj) * 86400.0 * zinda    ! Snow ice production ice production
+         zcmo(ji,jj,24) = tm_i(ji,jj) - rtt
+
+         zcmo(ji,jj,6)  = fbif  (ji,jj)
+         zcmo(ji,jj,7)  = zindb * (  u_ice(ji,jj) * tmu(ji,jj) + u_ice(ji-1,jj) * tmu(ji-1,jj) ) * 0.5_wp
+         zcmo(ji,jj,8)  = zindb * (  v_ice(ji,jj) * tmv(ji,jj) + v_ice(ji,jj-1) * tmv(ji,jj-1) ) * 0.5_wp
+         zcmo(ji,jj,9)  = sst_m(ji,jj)
+         zcmo(ji,jj,10) = sss_m(ji,jj)
+
+         zcmo(ji,jj,11) = qns(ji,jj) + qsr(ji,jj)
+         zcmo(ji,jj,12) = qsr(ji,jj)
+         zcmo(ji,jj,13) = qns(ji,jj)
+         zcmo(ji,jj,14) = fhbri(ji,jj)
+         zcmo(ji,jj,15) = utau_ice(ji,jj)
+         zcmo(ji,jj,16) = vtau_ice(ji,jj)
+         zcmo(ji,jj,17) = zcmo(ji,jj,17) + ( 1._wp - at_i(ji,jj) ) * qsr(ji,jj)
+         zcmo(ji,jj,18) = zcmo(ji,jj,18) + ( 1._wp - at_i(ji,jj) ) * qns(ji,jj)
+         zcmo(ji,jj,19) = sprecip(ji,jj)
+         zcmo(ji,jj,20) = smt_i(ji,jj)
+         zcmo(ji,jj,21) = ot_i(ji,jj)
+         zcmo(ji,jj,25) = et_i(ji,jj)
+         zcmo(ji,jj,26) = et_s(ji,jj)
+         zcmo(ji,jj,28) = sfx_bri(ji,jj)
+         zcmo(ji,jj,29) = sfx_thd(ji,jj)
+
+         zcmo(ji,jj,30) = bv_i(ji,jj)
+         zcmo(ji,jj,31) = hicol(ji,jj)
+         zcmo(ji,jj,32) = strength(ji,jj)
+         zcmo(ji,jj,33) = SQRT(  zcmo(ji,jj,7)*zcmo(ji,jj,7) + zcmo(ji,jj,8)*zcmo(ji,jj,8)  )
+         zcmo(ji,jj,34) = diag_sur_me(ji,jj) * 86400.0 * zinda    ! Surface melt
+         zcmo(ji,jj,35) = diag_bot_me(ji,jj) * 86400.0 * zinda    ! Bottom melt
+         zcmo(ji,jj,36) = divu_i(ji,jj)
+         zcmo(ji,jj,37) = shear_i(ji,jj)
+      END DO
+   END DO
+
+   ! Cumulates values between outputs           
+   rcmoy(:,:,:)= rcmoy(:,:,:) + zcmo(:,:,:)
+   nmoyice = nmoyice + 1 
+   ! compute mean value if it is time to write on file
+   IF ( MOD(numit,nwrite) == 0 ) THEN
+      rcmoy(:,:,:) = rcmoy(:,:,:) / FLOAT(nmoyice)
+#else  
+      IF ( MOD(numit,nwrite) == 0 ) THEN 
+         !  case of instantaneaous output rcmoy(:,:, 1:jpnoumax ) = 0.e0
+         zcmo ( 1:jpi, 1:jpj, 1:jpnoumax ) = 0._wp
+
+         DO jl = 1, jpl
+            DO jj = 1, jpj
+               DO ji = 1, jpi
+                  zindh  = MAX( zzero , SIGN( zone , vt_i(ji,jj) * at_i(ji,jj) - 0.10 ) )
+                  zinda  = MAX( zzero , SIGN( zone , at_i(ji,jj) - 0.10 ) )
+                  zcmo(ji,jj,17) = zcmo(ji,jj,17) + a_i(ji,jj,jl)*qsr_ice (ji,jj,jl)
+                  zcmo(ji,jj,18) = zcmo(ji,jj,18) + a_i(ji,jj,jl)*qns_ice(ji,jj,jl)
+                  zcmo(ji,jj,27) = zcmo(ji,jj,27) + t_su(ji,jj,jl)*a_i(ji,jj,jl)/MAX(at_i(ji,jj),epsi16)*zinda
+               END DO
+            END DO
+         END DO
+
+         CALL lim_var_bv
+
+         DO jj = 2 , jpjm1
+            DO ji = 2 , jpim1
+               zindh  = MAX( zzero , SIGN( zone , vt_i(ji,jj) * at_i(ji,jj) - 0.10 ) )
+               zinda  = MAX( zzero , SIGN( zone , at_i(ji,jj) - 0.10 ) )
+               zindb  = zindh * zinda
+
+
+               zcmo(ji,jj,1)  = at_i(ji,jj)
+               zcmo(ji,jj,2)  = vt_i(ji,jj) / MAX( at_i(ji,jj), epsi16 ) * zinda
+               zcmo(ji,jj,3)  = vt_s(ji,jj) / MAX( at_i(ji,jj), epsi16 ) * zinda
+               zcmo(ji,jj,4)  = diag_bot_gr(ji,jj) * 86400.0 * zinda    ! Bottom thermodynamic ice production
+               zcmo(ji,jj,5)  = diag_dyn_gr(ji,jj) * 86400.0 * zinda    ! Dynamic ice production (rid/raft)
+               zcmo(ji,jj,22) = diag_lat_gr(ji,jj) * 86400.0 * zinda    ! Lateral thermodynamic ice production
+               zcmo(ji,jj,23) = diag_sni_gr(ji,jj) * 86400.0 * zinda    ! Snow ice production ice production
+               zcmo(ji,jj,24) = tm_i(ji,jj) - rtt
+
+               zcmo(ji,jj,6)  = fbif  (ji,jj)
+               zcmo(ji,jj,7)  = zindb * (  u_ice(ji,jj) * tmu(ji,jj) + u_ice(ji-1,jj) * tmu(ji-1,jj) ) * 0.5_wp
+               zcmo(ji,jj,8)  = zindb * (  v_ice(ji,jj) * tmv(ji,jj) + v_ice(ji,jj-1) * tmv(ji,jj-1) ) * 0.5_wp
+               zcmo(ji,jj,9)  = sst_m(ji,jj)
+               zcmo(ji,jj,10) = sss_m(ji,jj)
+
+               zcmo(ji,jj,11) = qns(ji,jj) + qsr(ji,jj)
+               zcmo(ji,jj,12) = qsr(ji,jj)
+               zcmo(ji,jj,13) = qns(ji,jj)
+               zcmo(ji,jj,14) = fhbri(ji,jj)
+               zcmo(ji,jj,15) = utau_ice(ji,jj)
+               zcmo(ji,jj,16) = vtau_ice(ji,jj)
+               zcmo(ji,jj,17) = zcmo(ji,jj,17) + ( 1._wp - at_i(ji,jj) ) * qsr(ji,jj)
+               zcmo(ji,jj,18) = zcmo(ji,jj,18) + ( 1._wp - at_i(ji,jj) ) * qns(ji,jj)
+               zcmo(ji,jj,19) = sprecip(ji,jj)
+               zcmo(ji,jj,20) = smt_i(ji,jj)
+               zcmo(ji,jj,21) = ot_i(ji,jj)
+               zcmo(ji,jj,25) = et_i(ji,jj)
+               zcmo(ji,jj,26) = et_s(ji,jj)
+               zcmo(ji,jj,28) = sfx_bri(ji,jj)
+               zcmo(ji,jj,29) = sfx_thd(ji,jj)
+
+               zcmo(ji,jj,30) = bv_i(ji,jj)
+               zcmo(ji,jj,31) = hicol(ji,jj)
+               zcmo(ji,jj,32) = strength(ji,jj)
+               zcmo(ji,jj,33) = SQRT(  zcmo(ji,jj,7)*zcmo(ji,jj,7) + zcmo(ji,jj,8)*zcmo(ji,jj,8)  )
+               zcmo(ji,jj,34) = diag_sur_me(ji,jj) * 86400.0 * zinda    ! Surface melt
+               zcmo(ji,jj,35) = diag_bot_me(ji,jj) * 86400.0 * zinda    ! Bottom melt
+               zcmo(ji,jj,36) = divu_i(ji,jj)
+               zcmo(ji,jj,37) = shear_i(ji,jj)
+            END DO
+         END DO
+         rcmoy(:,:,:) = zcmo(;,:,:)
+#endif
+
+         !
+         DO jf = 1 , noumef
+            zfield(:,:) = (rcmoy(:,:,jf) * cmulti(jf) + cadd(jf)) * tmask(:,:,1)
+            SELECT CASE (jf)
+            CASE ( 7, 8, 15, 16 ) ! velocity or stress fields (vectors)
+               CALL lbc_lnk( zfield, 'T', -1. )
+            CASE DEFAULT          ! scalar fields
+               CALL lbc_lnk( zfield, 'T',  1. )
+            END SELECT
+            rcmoy(:,:,jf) = zfield(:,:)
+         END DO
+
+         IF (ll_dia_inst) THEN
+            clmode='instantaneous'
+         ELSE
+            WRITE(clmode,'(f5.1,a)' ) nwrite*rdt/86400.,' days average'
+         END IF
+         iyear = ndastp/10000
+         imon = (ndastp-iyear*10000)/100
+         iday = ndastp - imon*100 - iyear*10000
+         WRITE(clname,9000) TRIM(cexper),'ICEMOD',iyear,imon,iday
+         cltext=TRIM(cexper)//' ice modele output'//TRIM(clmode)
+         CALL dia_wri_dimg (clname, cltext, rcmoy, nwf , 'I', nsubindex)
+9000     FORMAT(a,"_",a,"_y",i4.4,"m",i2.2,"d",i2.2,".dimgproc")
+
+         rcmoy(:,:,:) = 0._wp
+         nmoyice = 0 
+      END IF     !  MOD(numit, nwrite == 0 ) !
+
+      ! ( 2 ) 3D ice field ( Lim3 only output )
+      !-----------------------------
+      ! Thickness distribution file
+      !-----------------------------
+      IF( add_diag_swi == 1 ) THEN
+
+         DO jl = 1, jpl
+            CALL lbc_lnk( a_i(:,:,jl)  , 'T' ,  1. )
+            CALL lbc_lnk( sm_i(:,:,jl) , 'T' ,  1. )
+            CALL lbc_lnk( oa_i(:,:,jl) , 'T' ,  1. )
+            CALL lbc_lnk( ht_i(:,:,jl) , 'T' ,  1. )
+            CALL lbc_lnk( ht_s(:,:,jl) , 'T' ,  1. )
+         END DO
+
+         ! Compute ice age
+         DO jl = 1, jpl
+            DO jj = 1, jpj
+               DO ji = 1, jpi
+                  zinda = MAX( zzero , SIGN( zone , a_i(ji,jj,jl) - 1.0e-6 ) )
+                  zoi(ji,jj,jl) = oa_i(ji,jj,jl)  / MAX( a_i(ji,jj,jl) , 1.0e-6 ) * zinda
+               END DO
+            END DO
+         END DO
+
+         ! Compute brine volume
+         zei(:,:,:) = 0._wp
+         DO jl = 1, jpl
+            DO jk = 1, nlay_i
+               DO jj = 1, jpj
+                  DO ji = 1, jpi
+                     zinda = MAX( zzero , SIGN( zone , a_i(ji,jj,jl) - 1.0e-6 ) )
+                     zei(ji,jj,jl) = zei(ji,jj,jl) + 100.0* &
+                          ( - tmut * s_i(ji,jj,jk,jl) / MIN( ( t_i(ji,jj,jk,jl) - rtt ), -1.0e-6 ) ) * &
+                          zinda / nlay_i
+                  END DO
+               END DO
+            END DO
+         END DO
+
+         DO jl = 1, jpl
+            CALL lbc_lnk( zei(:,:,jl) , 'T' ,  1. )
+         END DO
+         ! variables to be written : a_i, ht_i, ht_s, sm_i, zoi, zei ! in this order !
+
+# if ! defined key_diainstant
+         rcmoya(:,:,:,1) = rcmoya(:,:,:,1) + a_i(:,:,:)
+         rcmoya(:,:,:,2) = rcmoya(:,:,:,2) + ht_i(:,:,:)
+         rcmoya(:,:,:,3) = rcmoya(:,:,:,3) + ht_s(:,:,:)
+         rcmoya(:,:,:,4) = rcmoya(:,:,:,4) + sm_i(:,:,:)
+         rcmoya(:,:,:,5) = rcmoya(:,:,:,5) + zoi(:,:,:)
+         rcmoya(:,:,:,6) = rcmoya(:,:,:,6) + zei(:,:,:)
+         nmoyicea = nmoyicea + 1
+         IF ( MOD(numit,nwrite) == 0 ) THEN
+            rcmoya(:,:,:,:) = rcmoya(:,:,:,:)/ FLOAT(nmoyicea)
+# else 
+            IF ( MOD(numit,nwrite) == 0 ) THEN
+               rcmoya(:,:,:,1) = a_i(:,:,:)
+               rcmoya(:,:,:,2) = ht_i(:,:,:)
+               rcmoya(:,:,:,3) = ht_s(:,:,:)
+               rcmoya(:,:,:,4) = sm_i(:,:,:)
+               rcmoya(:,:,:,5) = zoi(:,:,:)
+               rcmoya(:,:,:,6) = zei(:,:,:)
+# endif
+
+               IF (ll_dia_inst) THEN
+                  clmode='instantaneous'
+               ELSE
+                  WRITE(clmode,'(f5.1,a)' ) nwrite*rdt/86400.,' days average'
+               END IF
+
+               iyear = ndastp/10000
+               imon = (ndastp-iyear*10000)/100
+               iday = ndastp - imon*100 - iyear*10000
+               WRITE(clname,9001) TRIM(cexper),'ICEMOA',iyear,imon,iday
+               cltext=TRIM(cexper)//' ice thickness distr '//TRIM(clmode)
+               DO jvar = 1, 6
+                  DO jl = 1, jpl
+                     ii=(jvar -1) * jpl + jl
+                     zdummy(:,:,ii) = rcmoya(:,:,jl,jvar)
+                  ENDDO
+               ENDDO
+               CALL dia_wri_dimg (clname, cltext, zdummy, 6*jpl , '2' )
+9001           FORMAT(a,"_",a,"_y",i4.4,"m",i2.2,"d",i2.2,".dimgproc")
+
+               rcmoya(:,:,:,:) = 0.0
+               nmoyicea = 0
+            ENDIF  !  MOD(numit,nwrite) == 0
+
+
+         ENDIF  ! add_diag_swi
+
+         CALL wrk_dealloc( jpi, jpj, zfield )
+         CALL wrk_dealloc( jpi, jpj, jpnoumax, zcmo )
+         CALL wrk_dealloc( jpi, jpj, jpl, zoi, zei )
+         CALL wrk_dealloc( jpi, jpj, 6*jpl, zdummy )
+
+      END SUBROUTINE lim_wri

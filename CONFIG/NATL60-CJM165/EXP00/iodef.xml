@@ -1,0 +1,1667 @@
+<?xml version="1.0"?>
+<simulation> 
+
+ <context id="nemo" time_origin="1958-01-01 00:00:00" >
+    
+    <!-- $id$ -->
+    
+    <!-- 
+============================================================================================================
+=                                  definition of all existing variables                                    =
+=                                            DO NOT CHANGE                                                 =
+============================================================================================================
+    -->
+    <field_definition src="./field_def.xml"/>
+    <!-- 
+============================================================================================================
+=                                           output files definition                                        =
+=                                            Define your own files                                         =
+=                                         put the variables you want...                                    =
+============================================================================================================
+    -->
+    
+    <file_definition type="multiple_file" name="<OUTDIR>/@expname@_@freq@" sync_freq="10d" min_digits="4">
+
+    
+      <file_group id="1ts" output_freq="1ts"  output_level="10" enabled=".TRUE."/> <!-- 1 time step files -->
+
+      <file_group id="1h" output_freq="1h"  split_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+        <file id="file1" name_suffix="_gridT" description="ocean T grid variables" >
+           <field field_ref="sst"          name="sosstsst"  />
+           <field field_ref="sss"          name="sosaline"  />
+           <field field_ref="ssh"          name="sossheig"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file040" name_suffix="_gridU" description="ocean U grid variables" >
+           <field field_ref="ssu"          name="vozocrtx"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file041" name_suffix="_gridV" description="ocean V grid variables" >
+           <field field_ref="ssv"          name="vomecrty"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- Sections -->
+
+        <file id="file06" name_suffix="_Se48wgridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48wT" domain_ref="Se48wT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file07" name_suffix="_Se19wgridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se19wT" domain_ref="Se19wT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file08" name_suffix="_Se48ngridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48nT" domain_ref="Se48nT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file09" name_suffix="_Se36ngridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se36nT" domain_ref="Se36nT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file010" name_suffix="_SeFBCgridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeFBCT" domain_ref="SeFBCT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file011" name_suffix="_SeDSgridT" description="ocean T grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeDST" domain_ref="SeDST" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file012" name_suffix="_Se48wgridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48wU" domain_ref="Se48wU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file013" name_suffix="_Se19wgridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se19wU" domain_ref="Se19wU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file014" name_suffix="_Se48ngridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48nU" domain_ref="Se48nU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file015" name_suffix="_Se36ngridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se36nU" domain_ref="Se36nU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file016" name_suffix="_SeFBCgridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeFBCU" domain_ref="SeFBCU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file017" name_suffix="_SeDSgridU" description="ocean U grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeDSU" domain_ref="SeDSU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file018" name_suffix="_Se48wgridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48wV" domain_ref="Se48wV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file019" name_suffix="_Se19wgridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se19wV" domain_ref="Se19wV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file020" name_suffix="_Se48ngridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48nV" domain_ref="Se48nV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file021" name_suffix="_Se36ngridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se36nV" domain_ref="Se36nV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file022" name_suffix="_SeFBCgridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeFBCV" domain_ref="SeFBCV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file023" name_suffix="_SeDSgridV" description="ocean V grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeDSV" domain_ref="SeDSV" >
+           <field field_ref="voce"         name="vomecrty" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file024" name_suffix="_Se48wgridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48wW" domain_ref="Se48wW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file025" name_suffix="_Se19wgridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se19wW" domain_ref="Se19wW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file026" name_suffix="_Se48ngridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se48nW" domain_ref="Se48nW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file027" name_suffix="_Se36ngridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="Se36nW" domain_ref="Se36nW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file028" name_suffix="_SeFBCgridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeFBCW" domain_ref="SeFBCW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file029" name_suffix="_SeDSgridW" description="ocean W grid variables" type="one_file" enabled=".true.">
+         <field_group id="SeDSW" domain_ref="SeDSW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- Mini OSM box -->
+        <file id="file050" name_suffix="_miniOSMgridT" description="Ocean T grid variables" type="one_file" enabled=".true.">
+          <field_group id="miniOSMT" domain_ref="miniOSMT" >
+            <field field_ref="toce" name="votemper" />
+            <field field_ref="soce" name="vosaline" />
+            <field field_ref="ssh"  name="sossheig" />
+          </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file051" name_suffix="_miniOSMgridU" description="Ocean U grid variables" type="one_file" enabled=".true.">
+          <field_group id="miniOSMU" domain_ref="miniOSMU" >
+            <field field_ref="uoce" name="vozocrtx" />
+            <field field_ref="utau" name="sozotaux" />
+          </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file052" name_suffix="_miniOSMgridV" description="Ocean V grid variables" type="one_file" enabled=".true.">
+          <field_group id="miniOSMV" domain_ref="miniOSMV" >
+            <field field_ref="voce" name="vomecrty" />
+            <field field_ref="vtau" name="sometauy" />
+          </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file053" name_suffix="_miniOSMgridW" description="Ocean W grid variables" type="one_file" enabled=".true.">
+          <field_group id="miniOSMW" domain_ref="miniOSMW" >
+            <field field_ref="woce"  name="vovecrtz" />
+            <field field_ref="avt"   name="voavt" />
+            <field field_ref="avmu"  name="voavmu" />
+            <field field_ref="avmv"  name="voavmv" />
+          </field_group>
+
+           <variable name="Comment"          type="string">"avmu avmv are on UW and VW grid point respectively"    </variable>
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+      </file_group>
+
+      <file_group id="2h" output_freq="2h"  output_level="10" enabled=".TRUE."/> <!-- 2h files -->
+      <file_group id="3h" output_freq="3h"  split_freq="1d" output_level="10" enabled=".TRUE."> <!-- 3h files -->     
+<!-- T FILES -->
+        <file id="file030" name_suffix="_gridT" description="ocean T grid variables" >
+          <field field_ref="ssh"          name="sossheig"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">3h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- U FILES -->
+        <file id="file031" name_suffix="_gridU" description="ocean U grid variables" >
+          <field field_ref="utau"          name="sozotaux"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">3h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- V FILES -->
+        <file id="file032" name_suffix="_gridV" description="ocean V grid variables" >
+          <field field_ref="vtau"          name="sometauy"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">3h       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+      </file_group>
+
+      <file_group id="4h" output_freq="4h"  output_level="10" enabled=".TRUE."/> <!-- 4h files -->
+      <file_group id="6h" output_freq="6h"  output_level="10" enabled=".TRUE."/> <!-- 6h files -->
+     
+      <file_group id="1d" output_freq="1d"  split_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1d files -->
+<!-- T FILES -->
+        <file id="file2" name_suffix="_gridTsurf" description="ocean T grid variables" >
+          <field field_ref="sst"          name="sosstsst"  />
+          <field field_ref="sss"          name="sosaline"  />
+          <field field_ref="ssh"          name="sossheig"  />
+          <field field_ref="mldr10_1"     name="somxl010"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file6" name_suffix="_gridT" description="ocean T grid variables" >
+            <field field_ref="toce"         name="votemper"   />
+            <field field_ref="soce"         name="vosaline"   />
+            <field field_ref="ssh"          name="sossheig"   />
+            <field field_ref="ttrd_zdf"     name="temtrd_zdf" />
+            <field field_ref="strd_zdf"     name="saltrd_zdf" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file007" name_suffix="_ptrcT" description="passive tracers variables" >
+           <field field_ref="TRC"            name="TRC"      />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file008" name_suffix="_diasub" description="Subduction diagnostics" >
+           <field field_ref="subrate_xad"     name="subrate_xad"     />
+           <field field_ref="subrate_yad"     name="subrate_yad"     />
+           <field field_ref="subrate_zad"     name="subrate_zad"     />
+           <field field_ref="subrate_mld"     name="subrate_mld"     />
+           <field field_ref="xad_sub_TRC"     name="xad_sub_TRC"     />
+           <field field_ref="yad_sub_TRC"     name="yad_sub_TRC"     />
+           <field field_ref="zad_sub_TRC"     name="zad_sub_TRC"     />
+           <field field_ref="mld_sub_TRC"     name="mld_sub_TRC"     />
+<!--           <field field_ref="xei_sub_TRC"    />
+           <field field_ref="yei_sub_TRC"    />
+           <field field_ref="zei_sub_TRC"    />
+           <field field_ref="xlf_sub_TRC"    />
+           <field field_ref="ylf_sub_TRC"    />
+           <field field_ref="zlf_sub_TRC"    /> -->
+           <field field_ref="zdf_sub_TRC"     name="zdf_sub_TRC"     />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+
+<!-- Boxes T-->
+        <file id="file21" name_suffix="_DSgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="DST" domain_ref="DST" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file22" name_suffix="_FBCgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="FBCT" domain_ref="FBCT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file23" name_suffix="_GIBgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="GIBT" domain_ref="GIBT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file24" name_suffix="_LMXgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="LMXT" domain_ref="LMXT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file25" name_suffix="_LABgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="LABT" domain_ref="LABT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file26" name_suffix="_OSMgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="OSMT" domain_ref="OSMT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file27" name_suffix="_AZOgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="AZOT" domain_ref="AZOT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file28" name_suffix="_BOBgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="BOBT" domain_ref="BOBT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file29" name_suffix="_GLIgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="GLIT" domain_ref="GLIT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file02" name_suffix="_REKgridT" description="ocean T grid variables" type="one_file" enabled=".false.">
+         <field_group id="REKT" domain_ref="REKT" >
+            <field field_ref="toce"         name="votemper"  />
+            <field field_ref="soce"         name="vosaline"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- U FILES -->
+        <file id="file3" name_suffix="_gridUsurf" description="ocean U grid variables" >
+          <field field_ref="ssu"        name="vozocrtx"  />
+          <field field_ref="uoce10"       name="vozo10m" enabled=".true."  />
+          <field field_ref="uoce30"       name="vozo30m" enabled=".true."  />
+          <field field_ref="uoce50"       name="vozo50m" enabled=".true."  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file9" name_suffix="_gridU" description="ocean U grid variables" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+           <field field_ref="utrd_zdf"    name="utrd_zdf"  />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- Boxes U-->
+        <file id="file31" name_suffix="_DSgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="DSU" domain_ref="DSU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file32" name_suffix="_FBCgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="FBCU" domain_ref="FBCU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file33" name_suffix="_GIBgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="GIBU" domain_ref="GIBU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file34" name_suffix="_LMXgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="LMXU" domain_ref="LMXU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  />   -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file35" name_suffix="_LABgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="LABU" domain_ref="LABU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file36" name_suffix="_OSMgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="OSMU" domain_ref="OSMU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file37" name_suffix="_AZOgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="AZOU" domain_ref="AZOU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  />  -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file38" name_suffix="_BOBgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="BOBU" domain_ref="BOBU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file39" name_suffix="_GLIgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="GLIU" domain_ref="GLIU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file03" name_suffix="_REKgridU" description="ocean U grid variables" type="one_file" enabled=".false.">
+         <field_group id="REKU" domain_ref="REKU" >
+           <field field_ref="uoce"        name="vozocrtx"  />
+           <field field_ref="utau"        name="sozotaux"  />
+<!--           <field field_ref="ublptrd"     name="vozoblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- V FILES -->
+        <file id="file4" name_suffix="_gridVsurf" description="ocean V grid variables" >
+          <field field_ref="ssv"           name="vomecrty" />
+          <field field_ref="voce10"        name="vome10m"  enabled=".true."/>
+          <field field_ref="voce30"        name="vome30m"  enabled=".true." />
+          <field field_ref="voce50"        name="vome50m"  enabled=".true." />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file10" name_suffix="_gridV" description="ocean V grid variables" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+           <field field_ref="vtrd_zdf"     name="vtrd_zdf" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- Boxes V -->
+        <file id="file41" name_suffix="_DSgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="DSV" domain_ref="DSV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file42" name_suffix="_FBCgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="FBCV" domain_ref="FBCV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file43" name_suffix="_GIBgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="GIBV" domain_ref="GIBV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file44" name_suffix="_LMXgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="LMXV" domain_ref="LMXV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file45" name_suffix="_LABgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="LABV" domain_ref="LABV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file46" name_suffix="_OSMgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="OSMV" domain_ref="OSMV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file47" name_suffix="_AZOgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="AZOV" domain_ref="AZOV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file48" name_suffix="_BOBgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="BOBV" domain_ref="BOBV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file49" name_suffix="_GLIgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="GLIV" domain_ref="GLIV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file04" name_suffix="_REKgridV" description="ocean V grid variables" type="one_file" enabled=".false.">
+         <field_group id="REKV" domain_ref="REKV" >
+           <field field_ref="voce"         name="vomecrty" />
+           <field field_ref="vtau"         name="sometauy" />
+<!--           <field field_ref="vblptrd"      name="vomeblp"  /> -->
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- W FILES --> 
+        <file id="file11" name_suffix="_gridW" description="ocean W grid variables" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    /> 
+          <field field_ref="avmu"         name="voavmu"    /> 
+          <field field_ref="avmv"         name="voavmv"    /> 
+
+           <variable name="Comment"          type="string">"avmu avmv are on UW and VW grid point respectively"    </variable>
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- Boxes W -->
+        <file id="file51" name_suffix="_LMXgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="LMXW" domain_ref="LMXW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    /> 
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file52" name_suffix="_LABgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="LABW" domain_ref="LABW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file53" name_suffix="_OSMgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="OSMW" domain_ref="OSMW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file54" name_suffix="_AZOgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="AZOW" domain_ref="AZOW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file55" name_suffix="_BOBgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="BOBW" domain_ref="BOBW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file56" name_suffix="_GLIgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="GLIW" domain_ref="GLIW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="file05" name_suffix="_REKgridW" description="ocean W grid variables" type="one_file" enabled=".false.">
+         <field_group id="REKW" domain_ref="REKW" >
+          <field field_ref="woce"         name="vovecrtz"    />
+          <field field_ref="avt"          name="voavt"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- ICE FILES -->
+        <file id="file12" name_suffix="_icemod" description="ocean Ice variables" >
+          <field field_ref="ice_cover"    name="ileadfra"   />
+          <field field_ref="snowthic_cea" name="isnowthi"  />    
+          <field field_ref="icethic_cea"  name="iicethic"  />
+          <field field_ref="iceprod_cea"  name="iiceprod"  />
+          <field field_ref="ist_ipa"      name="iicetemp"  />  <!-- checking ice ...temperature  ipa vs cea ??? -->
+          <field field_ref="uice_ipa"     name="iicevelu"  />
+          <field field_ref="vice_ipa"     name="iicevelv"  />
+          <field field_ref="utau_ice"     name="iicestru"  />
+          <field field_ref="vtau_ice"     name="iicestrv"  />
+          <field field_ref="qsr_io_cea"   name="iicesflx"  />
+          <field field_ref="qns_io_cea"   name="iicenflx"  />
+          <field field_ref="snowpre"      name="isnowpre"  />
+<!--          <field field_ref="iocesafl"     name="iocesafl"  />
+          <field field_ref="isursenf"     name="isursenf"  />
+          <field field_ref="isurlatf"     name="isurlatf"  />
+          <field field_ref="isurlowf"     name="isurlowf"  />
+          <field field_ref="isurshwf"     name="isurshwf"  />
+          <field field_ref="iicesenf"     name="iicesenf"  />
+          <field field_ref="iicelatf"     name="iicelatf"  />
+          <field field_ref="iicelowf"     name="iicelowf"  />
+          <field field_ref="iiceshwf"     name="iiceshwf"  />    -->
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+<!-- FLXT FILES -->
+        <file id="file8" name_suffix="_flxT" description="ocean T grid variables" >
+           <field field_ref="mldr10_1"     name="somxl010"  />
+           <field field_ref="mldkz5"       name="somixhgt"  />
+           <field field_ref="qt"           name="sohefldo"  />
+           <field field_ref="qsr"          name="soshfldo"  />
+           <field field_ref="qns_oce"      name="qns_oce"   />
+           <field field_ref="qns"          name="qns"       />
+           <field field_ref="qla_oce"      name="solhflup"  />
+           <field field_ref="qlw_oce"      name="solwfldo"  />
+           <field field_ref="qsb_oce"      name="sosbhfup"  />
+           <field field_ref="empmr"        name="sowaflup"  />
+           <field field_ref="saltflx"      name="sosfldow"  />    <!-- check in the code the 'old drakkar name' -->
+           <field field_ref="erp"          name="sowafld"   />
+           <field field_ref="qair"         name="sohumspe"  /> 
+           <field field_ref="tair"         name="sotemair"  />
+           <field field_ref="precip"       name="sowapre"   />  
+   <!--
+           <field field_ref="clouds"       name="soccov"    />   -->
+
+           <field field_ref="wspd"         name="sowinsp"  />
+           <field field_ref="runoffs"      name="sornf"    />
+
+   <!--    <field field_ref="20d"          name="20d"       /> 
+           <field field_ref="hc300"        name="hc300"     />  diahth routine -->
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+      </file_group>
+
+<!-- Instantaneous 1d output full domain -->
+      <file_group id="1di" output_freq="1d"  split_freq="1d"  output_level="10" enabled=".true."> <!-- 1d files -->
+        <file id="file060" name_suffix="_gridiT" description="ocean T grid variables" >
+            <field field_ref="toce"         name="votemper"   operation="instant" />
+            <field field_ref="soce"         name="vosaline"   operation="instant" />
+            <field field_ref="ssh"          name="sossheig"   operation="instant" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file061" name_suffix="_gridiU" description="ocean U grid variables" >
+           <field field_ref="uoce"        name="vozocrtx"   operation="instant" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file062" name_suffix="_gridiV" description="ocean V grid variables" >
+           <field field_ref="voce"        name="vomecrty"   operation="instant" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file063" name_suffix="_gridiW" description="ocean W grid variables" >
+           <field field_ref="woce" name="vovecrtz" operation="instant" />
+           <field field_ref="avt"   name="voavt"   operation="instant" />
+           <field field_ref="avmu"  name="voavmu"  operation="instant" />
+           <field field_ref="avmv"  name="voavmv"  operation="instant" />
+
+           <variable name="Comment"          type="string">"avmu avmv are on UW and VW grid point respectively"    </variable>
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+        <file id="file064" name_suffix="_icemodi" description="ocean Ice variables" >
+          <field field_ref="ice_cover"    name="ileadfra"  operation="instant" />
+          <field field_ref="snowthic_cea" name="isnowthi"  operation="instant" />
+          <field field_ref="icethic_cea"  name="iicethic"  operation="instant" />
+          <field field_ref="iceprod_cea"  name="iiceprod"  operation="instant" />
+          <field field_ref="ist_ipa"      name="iicetemp"  operation="instant" />  <!-- checking ice ...temperature  ipa vs cea ??? -->
+          <field field_ref="uice_ipa"     name="iicevelu"  operation="instant" />
+          <field field_ref="vice_ipa"     name="iicevelv"  operation="instant" />
+          <field field_ref="utau_ice"     name="iicestru"  operation="instant" />
+          <field field_ref="vtau_ice"     name="iicestrv"  operation="instant" />
+          <field field_ref="qsr_io_cea"   name="iicesflx"  operation="instant" />
+          <field field_ref="qns_io_cea"   name="iicenflx"  operation="instant" />
+          <field field_ref="snowpre"      name="isnowpre"  operation="instant" />
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+      </file_group>  <!-- 1d instant full domain -->
+
+      <file_group id="1dib" output_freq="1d"  split_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1d files -->
+<!-- BOX alteLMX -->
+        <file id="box0101" name_suffix="_alteLMXgridiT" description="diavecq T grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXT" domain_ref="alteLMXT" operation="instant" >
+            <field field_ref="ssh"          name="sossheig"  />
+            <field field_ref="buoyancy"     name="buoyancy"  />
+            <field field_ref="dxu"          name="dxu"       />
+            <field field_ref="dyv"          name="dyv"       />
+            <field field_ref="dxug"         name="dxug"      />
+            <field field_ref="dyvg"         name="dyvg"      />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0102" name_suffix="_alteLMXgridiU" description="diavecq U grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXU" domain_ref="alteLMXU" operation="instant" >
+            <field field_ref="uoce"         name="vozocrtx"  />
+            <field field_ref="dxbzdf"       name="dxbzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0103" name_suffix="_alteLMXgridiV" description="diavecq V grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXV" domain_ref="alteLMXV" operation="instant" >
+            <field field_ref="voce"         name="vomecrty"  />
+            <field field_ref="dybzdf"       name="dybzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0104" name_suffix="_alteLMXgridiW" description="diavecq W grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXW" domain_ref="alteLMXW" operation="instant" >
+            <field field_ref="woce"         name="vovecrtz"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0105" name_suffix="_alteLMXgridiF" description="diavecq F grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXF" domain_ref="alteLMXF" operation="instant" >
+            <field field_ref="dyu"         name="dyu"  />
+            <field field_ref="dxv"         name="dxv"  />
+            <field field_ref="dyug"        name="dyug" />
+            <field field_ref="dxvg"        name="dxvg" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0106" name_suffix="_alteLMXgridiUW" description="diavecq UW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXUW" domain_ref="alteLMXUW" operation="instant" >
+            <field field_ref="thu"         name="thu"   />
+            <field field_ref="dtthu"       name="dtthu" />
+            <field field_ref="dzuzdf"      name="dzuzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0107" name_suffix="_alteLMXgridiVW" description="diavecq VW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLMXVW" domain_ref="alteLMXVW" operation="instant" >
+            <field field_ref="thv"         name="thv"   />
+            <field field_ref="dtthv"       name="dtthv" />
+            <field field_ref="dzvzdf"      name="dzvzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- END BOX alteLMX -->
+
+<!-- BOX alteLAB -->
+        <file id="box0201" name_suffix="_alteLABgridiT" description="diavecq T grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABT" domain_ref="alteLABT" operation="instant" >
+            <field field_ref="ssh"          name="sossheig"  />
+            <field field_ref="buoyancy"     name="buoyancy"  />
+            <field field_ref="dxu"          name="dxu"       />
+            <field field_ref="dyv"          name="dyv"       />
+            <field field_ref="dxug"         name="dxug"      />
+            <field field_ref="dyvg"         name="dyvg"      />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0202" name_suffix="_alteLABgridiU" description="diavecq U grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABU" domain_ref="alteLABU" operation="instant" >
+            <field field_ref="uoce"         name="vozocrtx"  />
+            <field field_ref="dxbzdf"       name="dxbzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0203" name_suffix="_alteLABgridiV" description="diavecq V grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABV" domain_ref="alteLABV" operation="instant" >
+            <field field_ref="voce"         name="vomecrty"  />
+            <field field_ref="dybzdf"       name="dybzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0204" name_suffix="_alteLABgridiW" description="diavecq W grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABW" domain_ref="alteLABW" operation="instant" >
+            <field field_ref="woce"         name="vovecrtz"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0205" name_suffix="_alteLABgridiF" description="diavecq F grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABF" domain_ref="alteLABF" operation="instant" >
+            <field field_ref="dyu"         name="dyu"  />
+            <field field_ref="dxv"         name="dxv"  />
+            <field field_ref="dyug"        name="dyug" />
+            <field field_ref="dxvg"        name="dxvg" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0206" name_suffix="_alteLABgridiUW" description="diavecq UW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABUW" domain_ref="alteLABUW" operation="instant" >
+            <field field_ref="thu"         name="thu"   />
+            <field field_ref="dtthu"       name="dtthu" />
+            <field field_ref="dzuzdf"      name="dzuzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0207" name_suffix="_alteLABgridiVW" description="diavecq VW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteLABVW" domain_ref="alteLABVW" operation="instant" >
+            <field field_ref="thv"         name="thv"   />
+            <field field_ref="dtthv"       name="dtthv" />
+            <field field_ref="dzvzdf"      name="dzvzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- END BOX alteLAB -->
+
+<!-- BOX alteOSM -->
+        <file id="box0301" name_suffix="_alteOSMgridiT" description="diavecq T grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMT" domain_ref="alteOSMT" operation="instant" >
+            <field field_ref="ssh"          name="sossheig"  />
+            <field field_ref="buoyancy"     name="buoyancy"  />
+            <field field_ref="dxu"          name="dxu"       />
+            <field field_ref="dyv"          name="dyv"       />
+            <field field_ref="dxug"         name="dxug"      />
+            <field field_ref="dyvg"         name="dyvg"      />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0302" name_suffix="_alteOSMgridiU" description="diavecq U grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMU" domain_ref="alteOSMU" operation="instant" >
+            <field field_ref="uoce"         name="vozocrtx"  />
+            <field field_ref="dxbzdf"       name="dxbzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0303" name_suffix="_alteOSMgridiV" description="diavecq V grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMV" domain_ref="alteOSMV" operation="instant" >
+            <field field_ref="voce"         name="vomecrty"  />
+            <field field_ref="dybzdf"       name="dybzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0304" name_suffix="_alteOSMgridiW" description="diavecq W grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMW" domain_ref="alteOSMW" operation="instant" >
+            <field field_ref="woce"         name="vovecrtz"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0305" name_suffix="_alteOSMgridiF" description="diavecq F grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMF" domain_ref="alteOSMF" operation="instant" >
+            <field field_ref="dyu"         name="dyu"  />
+            <field field_ref="dxv"         name="dxv"  />
+            <field field_ref="dyug"        name="dyug" />
+            <field field_ref="dxvg"        name="dxvg" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0306" name_suffix="_alteOSMgridiUW" description="diavecq UW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMUW" domain_ref="alteOSMUW" operation="instant" >
+            <field field_ref="thu"         name="thu"   />
+            <field field_ref="dtthu"       name="dtthu" />
+            <field field_ref="dzuzdf"      name="dzuzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0307" name_suffix="_alteOSMgridiVW" description="diavecq VW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteOSMVW" domain_ref="alteOSMVW" operation="instant" >
+            <field field_ref="thv"         name="thv"   />
+            <field field_ref="dtthv"       name="dtthv" />
+            <field field_ref="dzvzdf"      name="dzvzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- END BOX alteOSM -->
+
+<!-- BOX alteAZO -->
+        <file id="box0401" name_suffix="_alteAZOgridiT" description="diavecq T grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOT" domain_ref="alteAZOT" operation="instant" >
+            <field field_ref="ssh"          name="sossheig"  />
+            <field field_ref="buoyancy"     name="buoyancy"  />
+            <field field_ref="dxu"          name="dxu"       />
+            <field field_ref="dyv"          name="dyv"       />
+            <field field_ref="dxug"         name="dxug"      />
+            <field field_ref="dyvg"         name="dyvg"      />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0402" name_suffix="_alteAZOgridiU" description="diavecq U grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOU" domain_ref="alteAZOU" operation="instant" >
+            <field field_ref="uoce"         name="vozocrtx"  />
+            <field field_ref="dxbzdf"       name="dxbzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0403" name_suffix="_alteAZOgridiV" description="diavecq V grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOV" domain_ref="alteAZOV" operation="instant" >
+            <field field_ref="voce"         name="vomecrty"  />
+            <field field_ref="dybzdf"       name="dybzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0404" name_suffix="_alteAZOgridiW" description="diavecq W grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOW" domain_ref="alteAZOW" operation="instant" >
+            <field field_ref="woce"         name="vovecrtz"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0405" name_suffix="_alteAZOgridiF" description="diavecq F grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOF" domain_ref="alteAZOF" operation="instant" >
+            <field field_ref="dyu"         name="dyu"  />
+            <field field_ref="dxv"         name="dxv"  />
+            <field field_ref="dyug"        name="dyug" />
+            <field field_ref="dxvg"        name="dxvg" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0406" name_suffix="_alteAZOgridiUW" description="diavecq UW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOUW" domain_ref="alteAZOUW" operation="instant" >
+            <field field_ref="thu"         name="thu"   />
+            <field field_ref="dtthu"       name="dtthu" />
+            <field field_ref="dzuzdf"      name="dzuzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0407" name_suffix="_alteAZOgridiVW" description="diavecq VW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteAZOVW" domain_ref="alteAZOVW" operation="instant" >
+            <field field_ref="thv"         name="thv"   />
+            <field field_ref="dtthv"       name="dtthv" />
+            <field field_ref="dzvzdf"      name="dzvzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- END BOX alteAZO -->
+
+<!-- BOX alteREK -->
+        <file id="box0501" name_suffix="_alteREKgridiT" description="diavecq T grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKT" domain_ref="alteREKT" operation="instant" >
+            <field field_ref="ssh"          name="sossheig"  />
+            <field field_ref="buoyancy"     name="buoyancy"  />
+            <field field_ref="dxu"          name="dxu"       />
+            <field field_ref="dyv"          name="dyv"       />
+            <field field_ref="dxug"         name="dxug"      />
+            <field field_ref="dyvg"         name="dyvg"      />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0502" name_suffix="_alteREKgridiU" description="diavecq U grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKU" domain_ref="alteREKU" operation="instant" >
+            <field field_ref="uoce"         name="vozocrtx"  />
+            <field field_ref="dxbzdf"       name="dxbzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0503" name_suffix="_alteREKgridiV" description="diavecq V grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKV" domain_ref="alteREKV" operation="instant" >
+            <field field_ref="voce"         name="vomecrty"  />
+            <field field_ref="dybzdf"       name="dybzdf"    />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0504" name_suffix="_alteREKgridiW" description="diavecq W grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKW" domain_ref="alteREKW" operation="instant" >
+            <field field_ref="woce"         name="vovecrtz"  />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0505" name_suffix="_alteREKgridiF" description="diavecq F grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKF" domain_ref="alteREKF" operation="instant" >
+            <field field_ref="dyu"         name="dyu"  />
+            <field field_ref="dxv"         name="dxv"  />
+            <field field_ref="dyug"        name="dyug" />
+            <field field_ref="dxvg"        name="dxvg" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0506" name_suffix="_alteREKgridiUW" description="diavecq UW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKUW" domain_ref="alteREKUW" operation="instant" >
+            <field field_ref="thu"         name="thu"   />
+            <field field_ref="dtthu"       name="dtthu" />
+            <field field_ref="dzuzdf"      name="dzuzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+
+        <file id="box0507" name_suffix="_alteREKgridiVW" description="diavecq VW grid variables" type="one_file" enabled=".true.">
+         <field_group id="alteREKVW" domain_ref="alteREKVW" operation="instant" >
+            <field field_ref="thv"         name="thv"   />
+            <field field_ref="dtthv"       name="dtthv" />
+            <field field_ref="dzvzdf"      name="dzvzdf" />
+         </field_group>
+
+           <variable name="start_date"       type="int"><NDATE0>    </variable>
+           <variable name="output_frequency" type="string">1d       </variable>
+           <variable name="CONFIG"           type="string"><CONFIG> </variable>
+           <variable name="CASE"             type="string"><CASE>   </variable>
+        </file>
+<!-- END BOX alteREK -->
+
+      </file_group>  <!-- 1d instant alteBOXES -->
+
+      <file_group id="3d" output_freq="3d"  split_freq="3d"  output_level="10" enabled=".TRUE."/> <!-- 3d files --> 
+      <file_group id="5d" output_freq="5d"  split_freq="5d"  output_level="10" enabled=".TRUE."/>  <!-- 5d files -->  
+
+<!--Moorings for Pedro Colombo  -->
+    <file_group id="moorpc" output_freq="1h"  split_freq="1d" name="<MOORDIR>/@expname@_@freq@_@startdate@_@enddate@"  output_level="10" enabled=".true.">
+<file id="moor2001" name_suffix="_moorDS1" type="one_file" enabled=".true." > <field_group group_ref="moorjm" domain_ref="MoDS1" /> </file>
+<file id="moor2002" name_suffix="_moorDS2" type="one_file" enabled=".true." > <field_group group_ref="moorjm" domain_ref="MoDS2" /> </file>
+<file id="moor2003" name_suffix="_moorFA" type="one_file" enabled=".true." > <field_group group_ref="moorjm" domain_ref="MoFA" /> </file>
+<file id="moor2004" name_suffix="_moorFB" type="one_file" enabled=".true." > <field_group group_ref="moorjm" domain_ref="MoFB" /> </file>
+<file id="moor2005" name_suffix="_moorFC" type="one_file" enabled=".true." > <field_group group_ref="moorjm" domain_ref="MoFC" /> </file>
+      </file_group>
+
+      <file_group id="1m" output_freq="1mo" output_level="10" enabled=".TRUE."/> <!-- real monthly files -->
+      <file_group id="2m" output_freq="2mo" output_level="10" enabled=".TRUE."/> <!-- real 2m files -->
+      <file_group id="3m" output_freq="3mo" output_level="10" enabled=".TRUE."/> <!-- real 3m files -->
+      <file_group id="4m" output_freq="4mo" output_level="10" enabled=".TRUE."/> <!-- real 4m files -->
+      <file_group id="6m" output_freq="6mo" output_level="10" enabled=".TRUE."/> <!-- real 6m files -->
+      <file_group id="1y"  output_freq="1y" output_level="10" enabled=".TRUE."/> <!-- real yearly files -->
+      <file_group id="2y"  output_freq="2y" output_level="10" enabled=".TRUE."/> <!-- real 2y files -->
+      <file_group id="5y"  output_freq="5y" output_level="10" enabled=".TRUE."/> <!-- real 5y files -->
+      <file_group id="10y" output_freq="10y" output_level="10" enabled=".TRUE."/> <!-- real 10y files -->
+
+   </file_definition>
+    
+    <!-- 
+============================================================================================================
+= grid definition = = DO NOT CHANGE =
+============================================================================================================
+    -->
+    
+   <axis_definition>  
+      <axis id="deptht" long_name="Vertical T levels" unit="m" positive="down" />
+      <axis id="depthu" long_name="Vertical U levels" unit="m" positive="down" />
+      <axis id="depthv" long_name="Vertical V levels" unit="m" positive="down" />
+      <axis id="depthw" long_name="Vertical W levels" unit="m" positive="down" />
+      <axis id="nfloat" long_name="Float number"      unit="-"  />
+      <axis id="icbcla" long_name="Iceberg class"     unit="-"  />
+   </axis_definition> 
+    
+   <domain_definition src="./domain_def.xml"/>
+   
+   <grid_definition>    
+     <grid id="grid_T_2D" domain_ref="grid_T"/>
+     <grid id="grid_T_3D" domain_ref="grid_T" axis_ref="deptht"/>
+     <grid id="grid_U_2D" domain_ref="grid_U"/>
+     <grid id="grid_U_3D" domain_ref="grid_U" axis_ref="depthu"/>
+     <grid id="grid_V_2D" domain_ref="grid_V"/>
+     <grid id="grid_V_3D" domain_ref="grid_V" axis_ref="depthv"/>
+     <grid id="grid_W_2D" domain_ref="grid_W"/>
+     <grid id="grid_W_3D" domain_ref="grid_W" axis_ref="depthw"/>
+     <grid id="grid_F_3D" domain_ref="grid_F" axis_ref="deptht"/>
+     <grid id="grid_UW_3D" domain_ref="grid_UW" axis_ref="depthw"/>
+     <grid id="grid_VW_3D" domain_ref="grid_VW" axis_ref="depthw"/>
+    </grid_definition> 
+
+  </context>
+  
+
+  <context id="xios">
+
+      <variable_definition>
+	
+     <!-- 
+        We must have buffer_size > jpi*jpj*jpk*8 (with jpi and jpj the subdomain size)
+     -->
+<!--	  <variable id="buffer_size"               type="integer">25000000</variable> -->
+	  <variable id="buffer_size"               type="integer">18000000</variable>  
+	  <variable id="buffer_server_factor_size" type="integer">2</variable>
+	  <variable id="info_level"                type="integer">-1</variable>
+	  <variable id="using_server"              type="boolean">true</variable>
+	  <variable id="using_oasis"               type="boolean">false</variable>
+	  <variable id="oasis_codes_id"            type="string" >oceanx</variable>
+	
+      </variable_definition>
+               
+  </context>
+  
+</simulation>

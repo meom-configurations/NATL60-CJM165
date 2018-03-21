@@ -1,0 +1,345 @@
+
+   <domain_definition>
+      <domain_group id="grid_T">
+         <domain id="grid_T" long_name="grid T"/>
+	 <!--   My zoom: example of hand defined zoom   -->
+         <domain id="myzoom" zoom_ibegin="10" zoom_jbegin="10" zoom_ni="5" zoom_nj="5" />
+     <!--  NATL60 BOXES -->
+         <domain id="DST" zoom_ibegin="2475" zoom_jbegin="2900" zoom_ni="1022" zoom_nj="555" />
+         <domain id="FBCT" zoom_ibegin="3982" zoom_jbegin="2611" zoom_ni="505" zoom_nj="393" />
+         <domain id="GIBT" zoom_ibegin="4246" zoom_jbegin="399" zoom_ni="373" zoom_nj="361" />
+         <domain id="LMXT" zoom_ibegin="389" zoom_jbegin="310" zoom_ni="1032" zoom_nj="756" />
+         <domain id="LABT" zoom_ibegin="1465" zoom_jbegin="2343" zoom_ni="942" zoom_nj="748" />
+         <domain id="OSMT" zoom_ibegin="3790" zoom_jbegin="1608" zoom_ni="378" zoom_nj="463" />
+         <domain id="AZOT" zoom_ibegin="2608" zoom_jbegin="233" zoom_ni="840" zoom_nj="575" />
+         <domain id="BOBT" zoom_ibegin="4421" zoom_jbegin="1235" zoom_ni="373" zoom_nj="511" />
+         <domain id="GLIT" zoom_ibegin="5049" zoom_jbegin="1116" zoom_ni="306" zoom_nj="259" />
+         <domain id="REKT" zoom_ibegin="2665" zoom_jbegin="1814" zoom_ni="514" zoom_nj="887" />
+         <!--  NATL60  Section -->
+         <domain id="Se48wT" zoom_ibegin="2001" zoom_jbegin="1" zoom_ni="2" zoom_nj="3454"  /> 
+         <domain id="Se19wT" zoom_ibegin="3671" zoom_jbegin="1" zoom_ni="2" zoom_nj="3070"  /> 
+         <domain id="Se48nT" zoom_ibegin="1671" zoom_jbegin="1640" zoom_ni="2952" zoom_nj="2"  /> 
+         <domain id="Se36nT" zoom_ibegin="349" zoom_jbegin="659" zoom_ni="4544" zoom_nj="2"  />
+         <domain id="SeFBCT" zoom_ibegin="4209" zoom_jbegin="2866" zoom_ni="2" zoom_nj="89"  /> 
+         <domain id="SeDST" zoom_ibegin="3153" zoom_jbegin="3318" zoom_ni="192" zoom_nj="2"  /> 
+
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMT" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXT" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOT" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKT" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKT" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMT" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABT" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCT" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+
+	 <!--   Eq section   -->
+         <domain id="EqT" zoom_ibegin="1" zoom_jbegin="0000" zoom_ni="0000" zoom_nj="1" />
+         <!--   TAO   -->
+         <!--   137e   -->
+         <domain id="2n137eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n137eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n137eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   147e   -->
+         <domain id="0n147eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n147eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n147eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   156e   -->
+         <domain id="5s156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n156eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   165e   -->
+         <domain id="8s165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n165eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   180w   -->
+         <domain id="8s180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n180wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   170w   -->
+         <domain id="8s170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n170wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   155w   -->
+         <domain id="8s155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n155wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   140w   -->
+         <domain id="8s140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n140wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   125w   -->
+         <domain id="8s125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n125wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   110w   -->
+         <domain id="8s110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n110wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   95w   -->
+         <domain id="8s95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2s95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="2n95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5n95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n95wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   RAMA   -->
+         <!--   55e   -->
+         <domain id="16s55eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12s55eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8s55eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4s55eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5s55eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n55eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5n55eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n55eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+            <!--   65e   -->
+         <domain id="15n65eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+            <!--   67e   -->
+         <domain id="16s67eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12s67eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8s67eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4s67eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5s67eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n67eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5n67eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n67eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n67eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   80.5e   -->
+         <domain id="16s80.5eT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12s80.5eT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8s80.5eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4s80.5eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5s80.5eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n80.5eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5n80.5eT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n80.5eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   90e   -->
+         <domain id="1.5s90eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n90eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="1.5n90eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n90eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n90eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12n90eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="15n90eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   95e   -->
+         <domain id="16s95eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12s95eT"    zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8s95eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="5s95eT"     zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   PIRATA   -->
+         <!--   38w-30w   -->
+         <domain id="19s34wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="14s32wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8s30wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n35wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n38wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="8n38wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12n38wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="15n38wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="20n38wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   23w   -->
+         <domain id="0n23wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="4n23wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="12n23wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="21n23wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   10w   -->
+         <domain id="10s10wT" zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="6s10wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <domain id="0n10wT"  zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+         <!--   0e   -->
+         <domain id="0n0eT"   zoom_ibegin="0000" zoom_jbegin="0000" zoom_ni="1" zoom_nj="1" />
+<!-- Mooring for P. Colombo -->
+<!-- Faroes Bank Channel ( Hansen et Al. Prog. in Oceanogr. 2007) -->
+<domain id="MoFA" zoom_ibegin="4220" zoom_jbegin="2901" zoom_ni="1" zoom_nj="1"  /> 
+<domain id="MoFB" zoom_ibegin="4218" zoom_jbegin="2898" zoom_ni="1" zoom_nj="1"  /> 
+<domain id="MoFC" zoom_ibegin="4216" zoom_jbegin="2899" zoom_ni="1" zoom_nj="1"  /> 
+
+<!-- Denmark Strait ( Jochumsen et Al. JGR 2012 )  -->
+<domain id="MoDS1" zoom_ibegin="3275" zoom_jbegin="3317" zoom_ni="1" zoom_nj="1"  /> 
+<domain id="MoDS2" zoom_ibegin="3267" zoom_jbegin="3322" zoom_ni="1" zoom_nj="1"  /> 
+      </domain_group>
+
+      <domain_group id="grid_U">
+         <domain id="grid_U" long_name="grid U"/>
+         <domain id="DSU" zoom_ibegin="2475" zoom_jbegin="2900" zoom_ni="1022" zoom_nj="555" />
+         <domain id="FBCU" zoom_ibegin="3982" zoom_jbegin="2611" zoom_ni="505" zoom_nj="393" />
+         <domain id="GIBU" zoom_ibegin="4246" zoom_jbegin="399" zoom_ni="373" zoom_nj="361" />
+         <domain id="LMXU" zoom_ibegin="389" zoom_jbegin="310" zoom_ni="1032" zoom_nj="756"  />
+         <domain id="LABU" zoom_ibegin="1465" zoom_jbegin="2343" zoom_ni="942" zoom_nj="748"  />
+         <domain id="OSMU" zoom_ibegin="3790" zoom_jbegin="1608" zoom_ni="378" zoom_nj="463"  /> 
+         <domain id="AZOU" zoom_ibegin="2608" zoom_jbegin="233" zoom_ni="840" zoom_nj="575"  /> 
+         <domain id="BOBU" zoom_ibegin="4421" zoom_jbegin="1235" zoom_ni="373" zoom_nj="511"  /> 
+         <domain id="GLIU" zoom_ibegin="5049" zoom_jbegin="1116" zoom_ni="306" zoom_nj="259"  /> 
+         <domain id="REKU" zoom_ibegin="2665" zoom_jbegin="1814" zoom_ni="514" zoom_nj="887"  /> 
+
+         <!--  NATL60  Section -->
+         <domain id="Se48wU" zoom_ibegin="2001" zoom_jbegin="1" zoom_ni="2" zoom_nj="3454"  /> 
+         <domain id="Se19wU" zoom_ibegin="3671" zoom_jbegin="1" zoom_ni="2" zoom_nj="3070"  /> 
+         <domain id="Se48nU" zoom_ibegin="1671" zoom_jbegin="1640" zoom_ni="2952" zoom_nj="2"  /> 
+         <domain id="Se36nU" zoom_ibegin="349" zoom_jbegin="659" zoom_ni="4544" zoom_nj="2"  /> 
+         <domain id="SeFBCU" zoom_ibegin="4209" zoom_jbegin="2866" zoom_ni="2" zoom_nj="89"  /> 
+         <domain id="SeDSU" zoom_ibegin="3153" zoom_jbegin="3318" zoom_ni="192" zoom_nj="2"  /> 
+
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMU" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXU" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOU" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKU" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKU" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMU" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABU" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCU" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+         <!--   Eq section   -->
+         <domain id="EqU" zoom_ibegin="1" zoom_jbegin="0000" zoom_ni="0000" zoom_nj="1" />
+      </domain_group>
+
+      <domain_group id="grid_V">
+        <domain id="grid_V" long_name="grid V"/>
+         <domain id="DSV" zoom_ibegin="2475" zoom_jbegin="2900" zoom_ni="1022" zoom_nj="555" />
+         <domain id="FBCV" zoom_ibegin="3982" zoom_jbegin="2611" zoom_ni="505" zoom_nj="393" />
+         <domain id="GIBV" zoom_ibegin="4246" zoom_jbegin="399" zoom_ni="373" zoom_nj="361" />
+         <domain id="LMXV" zoom_ibegin="389" zoom_jbegin="310" zoom_ni="1032" zoom_nj="756"  /> 
+         <domain id="LABV" zoom_ibegin="1465" zoom_jbegin="2343" zoom_ni="942" zoom_nj="748"  /> 
+         <domain id="OSMV" zoom_ibegin="3790" zoom_jbegin="1608" zoom_ni="378" zoom_nj="463"  /> 
+         <domain id="AZOV" zoom_ibegin="2608" zoom_jbegin="233" zoom_ni="840" zoom_nj="575"  /> 
+         <domain id="BOBV" zoom_ibegin="4421" zoom_jbegin="1235" zoom_ni="373" zoom_nj="511"  /> 
+         <domain id="GLIV" zoom_ibegin="5049" zoom_jbegin="1116" zoom_ni="306" zoom_nj="259"  /> 
+         <domain id="REKV" zoom_ibegin="2665" zoom_jbegin="1814" zoom_ni="514" zoom_nj="887"  /> 
+
+         <!--  NATL60  Section -->
+         <domain id="Se48wV" zoom_ibegin="2001" zoom_jbegin="1" zoom_ni="2" zoom_nj="3454"  /> 
+         <domain id="Se19wV" zoom_ibegin="3671" zoom_jbegin="1" zoom_ni="2" zoom_nj="3070"  /> 
+         <domain id="Se48nV" zoom_ibegin="1671" zoom_jbegin="1640" zoom_ni="2952" zoom_nj="2"  /> 
+         <domain id="Se36nV" zoom_ibegin="349" zoom_jbegin="659" zoom_ni="4544" zoom_nj="2"  /> 
+         <domain id="SeFBCV" zoom_ibegin="4209" zoom_jbegin="2866" zoom_ni="2" zoom_nj="89"  /> 
+         <domain id="SeDSV" zoom_ibegin="3153" zoom_jbegin="3318" zoom_ni="192" zoom_nj="2"  /> 
+
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMV" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXV" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOV" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKV" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKV" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMV" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABV" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCV" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+
+      </domain_group>
+
+      <domain_group id="grid_W">
+         <domain id="grid_W" long_name="grid W"/>
+         <domain id="LMXW" zoom_ibegin="389" zoom_jbegin="310" zoom_ni="1032" zoom_nj="756"  /> 
+         <domain id="LABW" zoom_ibegin="1465" zoom_jbegin="2343" zoom_ni="942" zoom_nj="748"  /> 
+         <domain id="OSMW" zoom_ibegin="3790" zoom_jbegin="1608" zoom_ni="378" zoom_nj="463"  /> 
+         <domain id="AZOW" zoom_ibegin="2608" zoom_jbegin="233" zoom_ni="840" zoom_nj="575"  />
+         <domain id="BOBW" zoom_ibegin="4421" zoom_jbegin="1235" zoom_ni="373" zoom_nj="511"  />
+         <domain id="GLIW" zoom_ibegin="5049" zoom_jbegin="1116" zoom_ni="306" zoom_nj="259"  /> 
+         <domain id="REKW" zoom_ibegin="2665" zoom_jbegin="1814" zoom_ni="514" zoom_nj="887"  /> 
+
+         <!--  NATL60  Section -->
+         <domain id="Se48wW" zoom_ibegin="2001" zoom_jbegin="1" zoom_ni="2" zoom_nj="3454"  />
+         <domain id="Se19wW" zoom_ibegin="3671" zoom_jbegin="1" zoom_ni="2" zoom_nj="3070"  /> 
+         <domain id="Se48nW" zoom_ibegin="1671" zoom_jbegin="1640" zoom_ni="2952" zoom_nj="2"  /> 
+         <domain id="Se36nW" zoom_ibegin="349" zoom_jbegin="659" zoom_ni="4544" zoom_nj="2"  /> 
+         <domain id="SeFBCW" zoom_ibegin="4209" zoom_jbegin="2866" zoom_ni="2" zoom_nj="89"  /> 
+         <domain id="SeDSW" zoom_ibegin="3153" zoom_jbegin="3318" zoom_ni="192" zoom_nj="2"  /> 
+
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMW" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXW" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOW" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMW" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABW" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCW" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+         <!--   Eq section   -->
+         <domain id="EqW" zoom_ibegin="1" zoom_jbegin="0000" zoom_ni="0000" zoom_nj="1" />
+      </domain_group>
+
+      <domain_group id="grid_F">
+         <domain id="grid_F" long_name="grid F"/>
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMF" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXF" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOF" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKF" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKF" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMF" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABF" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCF" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+      </domain_group>
+
+      <domain_group id="grid_UW">
+         <domain id="grid_UW" long_name="grid UW"/>
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMUW" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXUW" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOUW" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKUW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKUW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMUW" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABUW" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCUW" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+      </domain_group>
+
+      <domain_group id="grid_VW">
+         <domain id="grid_VW" long_name="grid VW"/>
+    <!-- Alternative  boxes for NATL60-CJM165  -->
+         <domain id="miniOSMVW" zoom_ibegin="3875" zoom_jbegin="1644" zoom_ni="34"  zoom_nj="54"  />
+         <domain id="alteLMXVW" zoom_ibegin="721"  zoom_jbegin="681"  zoom_ni="306" zoom_nj="233" />
+         <domain id="alteAZOVW" zoom_ibegin="2608" zoom_jbegin="302"  zoom_ni="361" zoom_nj="284" />
+         <domain id="alteREKVW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteREKVW" zoom_ibegin="2870" zoom_jbegin="2042" zoom_ni="287" zoom_nj="271" />
+         <domain id="alteOSMVW" zoom_ibegin="3790" zoom_jbegin="1607" zoom_ni="277" zoom_nj="275" />
+         <domain id="alteLABVW" zoom_ibegin="1744" zoom_jbegin="2645" zoom_ni="384" zoom_nj="258" />
+         <domain id="NWCVW" zoom_ibegin="1291" zoom_jbegin="673"  zoom_ni="2084" zoom_nj="1830" />
+      </domain_group>
+
+      <domain_group id="scalarpoint"> 
+         <domain id="scalarpoint" long_name="scalar"/> 
+         <!-- 
+         <domain id="1point" zoom_ibegin="1" zoom_jbegin="1" zoom_ni="1" zoom_nj="1" /> 
+         --> 
+      </domain_group>
+
+      <domain_group id="gznl">
+         <domain id="ptr" long_name="zonal mean grid" zoom_ibegin="0000"  zoom_jbegin="1" zoom_ni="1" zoom_nj="0000" />
+      </domain_group>
+
+
+   </domain_definition>    
+ 

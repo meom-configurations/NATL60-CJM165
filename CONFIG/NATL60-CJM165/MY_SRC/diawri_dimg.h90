@@ -1,0 +1,594 @@
+  !!----------------------------------------------------------------------
+  !!                        ***  diawri_dimg.h90  ***
+  !!----------------------------------------------------------------------
+  !! NEMO/OPA 3.3 , NEMO Consortium (2010)
+  !! $Id $
+  !! Software governed by the CeCILL licence     (NEMOGCM/NEMO_CeCILL.txt)
+  !!----------------------------------------------------------------------
+
+  SUBROUTINE dia_wri( kt )
+    !!----------------------------------------------------------------------
+    !!           *** routine dia_wri ***
+    !!
+    !! ** Purpose : output dynamics and tracer fields on direct access file
+    !!              suitable for MPP computing
+    !!
+    !! ** define key : 'key_dimgout'
+    !!
+    !! **  Method : Default is to cumulate the values over the interval between
+    !!      2 output, and each nwrite time-steps  the mean value is  computed 
+    !!      and written to the direct access file.
+    !!     If 'key_diainstant' is defined, no mean values are computed and the 
+    !!     instantaneous fields are dump.
+    !!       Each processor creates its own file with its local data
+    !!     Merging all the files is performed off line by a dedicated program
+    !!
+    !! ** Arguments :
+    !!     kt      : time-step number
+    !!     kindinc :  error condition indicator : >=0 :  OK, < 0 : error.
+    !!
+    !! ** Naming convention for files
+    !!
+    !! {cexper}_{var}_y----m--d--.dimg
+    !!   cexper is the name of the experience, given in the namelist
+    !!   var can be either U, V, T, S, KZ, SSH, ...
+    !!   var can also be 2D, which means that each level of the file is a 2D field as described below
+    !!    y----m--d--  is the date at the time of the dump
+    !!    For mpp output, each processor dumps its own memory, on appropriate record range 
+    !!    (direct access : for level jk of a klev field on proc narea irec = 1+ klev*(narea -1) + jk )
+    !!
+    !!  level 1:  utau(:,:) * umask(:,:,1) zonal stress in N.m-2
+    !!  level 2:  vtau(:,:) * vmask(:,:,1) meridional stress in N. m-2
+    !!  level 3:  qsr + qns                total heat flux (W/m2)
+    !!  level 4:  emp (:,:)               E-P flux (mm/day)
+    !!  level 5:  tb  (:,:,1)-sst          model SST -forcing sst (degree C) ! deprecated
+    !!  level 6:  sshn(:,:)		   streamfunction (m**3/s)
+    !!  level 7:  qsr (:,:)		   solar flux (W/m2)
+    !!  level 8:  qrp (:,:)                relax component of T flux.
+    !!  level 9:  erp (:,:)                relax component of S flux
+    !!  level 10: hmld(:,:)                turbocline depth
+    !!  level 11: hmlp(:,:)                mixed layer depth
+    !!  level 12: fr_i(:,:)                ice fraction (between 0 and 1)
+    !!  level 13: sst(:,:)                 the observed SST we relax to. ! deprecated
+    !!  level 14: qct(:,:)                 equivalent flux due to treshold SST
+    !!  level 15: fbt(:,:)                 feedback term .
+    !!  level 16: sfx(:,:)                concentration/dilution water flux
+    !!  level 17: fsalt(:,:)               Ice=>ocean net freshwater
+    !!  level 18: gps(:,:)                 the surface pressure (m).
+    !!  level 19: spgu(:,:)                the surface pressure gradient in X direction.
+    !!  level 20: spgv(:,:)                the surface pressure gradient in Y direction.
+    !!  level 21: qla(:,:)                 Latent Heat flux
+    !!  level 22: qlw(:,:)                 Long Wave heat flux (IR)
+    !!  level 23: qsb(:,:)                 Sensible Heat Flux
+    !! 
+    !!  Additional 2DFLX file is used to store atmospheric fluxes
+    !!  level  1: qla(:,:)                 Latent Heat flux
+    !!  level  2: qlw(:,:)                 Long Wave heat flux (IR)
+    !!  level  3: qsb(:,:)                 Sensible Heat Flux
+    !!  level  4: qsr (:,:)		   solar flux (W/m2)
+    !!  level  5: qsr + qns                total heat flux (W/m2)
+    !!  level  6: qrp (:,:)                relax component of T flux.
+    !!  level  7: emp (:,:)                E-P flux (mm/day)
+    !!  level  8: sfx(:,:)                concentration/dilution water flux (mm/day)
+    !!  level  9: erp (:,:)                relax component of S flux  (mm/day)
+    !!  level 10: hatm(:,:)                air humidity
+    !!  level 11: tatm(:,:)                air temperature (Celsius)
+    !!  level 12: vatm(:,:)                wind magnitude at 10m
+    !!  level 13: watm(:,:)                total precipitation at surface
+    !!  level 14: catm(:,:)                total cloudiness vertically integrated
+    !!  level 15: runoff(:,:)              runoff flux
+    !!
+    !! History:  OPA  ! 1997-02 ( Clipper Group ) dimg files
+    !!            -   ! 2003-12 ( J.M. Molines) f90, mpp output for OPA9.0
+    !!   NEMO    1.0  ! 2005-05  (S. Theetten) add sfx fsalt move gps spgu spgv 2 lines below
+    !!            -   ! 2005-11  (V. Garnier) Surface pressure gradient organization
+    !!----------------------------------------------------------------------
+    USE lib_mpp
+    !!
+    INTEGER ,INTENT(in) :: kt
+    !!
+#if defined key_diainstant
+    LOGICAL, PARAMETER :: ll_dia_inst=.TRUE.  !: for instantaneous output
+#else
+    LOGICAL, PARAMETER :: ll_dia_inst=.FALSE. !: for average output
+#endif
+    INTEGER, PARAMETER :: jpflx=15
+    INTEGER  ::  jk
+    INTEGER  ::  ialloc
+    INTEGER  ::  iday, iyear, imon
+    INTEGER  ::  inbsel
+    INTEGER              , SAVE                    ::  nmoyct 
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) ::  um , vm, wm   ! mean u, v, w fields
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) ::  avtm          ! mean kz fields
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) ::  tm , sm       ! mean t, s fields
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) ::  fsel          ! mean 2d fields
+!{ DRAKKAR
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) ::  fselflx          ! mean 2d fields
+!   REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:)   :: ncount_bbls    ! cumul of bbl counter (t)
+!   REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:)   :: ncountu_bbls   ! cumul of bbl counters (u)
+!   REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:)   :: ncountv_bbls   ! cumul of bbl counters (v)
+!   REAL(wp), POINTER, DIMENSION (:,:,:)           ::  zbbl          ! used to compute mean 2d fields
+
+    REAL(wp), ALLOCATABLE, SAVE, DIMENSION (:,:,:) :: umeiv , vmeiv, wmeiv   ! used to compute mean u, v fields
+!}
+    REAL(wp) :: zdtj
+    CHARACTER(LEN=80) :: clname
+    CHARACTER(LEN=80) :: cltext
+    CHARACTER(LEN=80) :: clmode
+    CHARACTER(LEN= 4) :: clver
+    !!----------------------------------------------------------------------
+    IF( nn_timing == 1 )   CALL timing_start('dia_wri')
+    !
+    !  Initialization
+    !  ---------------
+    !
+    IF( .NOT. ALLOCATED(um) )THEN
+       ALLOCATE(um(jpi,jpj,jpk), vm(jpi,jpj,jpk), &
+                wm(jpi,jpj,jpk),                  &
+                avtm(jpi,jpj,jpk),                &
+                tm(jpi,jpj,jpk), sm(jpi,jpj,jpk), &
+                fsel(jpi,jpj,jpk),                &
+                fselflx(jpi,jpj,jpk),             &
+                STAT=ialloc )
+       !
+       IF( lk_mpp      )   CALL mpp_sum ( ialloc  )
+       IF( ialloc /= 0 )   CALL ctl_warn('dia_wri( diawri_dimg.h90) : failed to allocate arrays')
+    ENDIF
+
+!   IF ( lk_trabbl .AND. ln_counter ) THEN
+!      IF( .NOT. ALLOCATED(ncount_bbls) )THEN
+!         ALLOCATE(ncount_bbls(jpi,jpj),          &
+!                  ncountu_bbls(jpi,jpj),         &
+!                  ncountv_bbls(jpi,jpj),         &
+!                  STAT=ialloc )
+!         !
+!         IF( lk_mpp      )   CALL mpp_sum ( ialloc  )
+!         IF( ialloc /= 0 )   CALL ctl_warn('dia_wri( diawri_dimg.h90) : failed to allocate bbl arrays')
+!         CALL wrk_alloc( jpi, jpj, 3, zbbl )
+!      ENDIF
+!   ENDIF
+#if defined key_diaeiv
+    IF( .NOT. ALLOCATED(umeiv) )THEN
+       ALLOCATE(umeiv(jpi,jpj,jpk),               &
+                vmeiv(jpi,jpj,jpk),               &
+                wmeiv(jpi,jpj,jpk),               &
+                STAT=ialloc )
+       !
+       IF( lk_mpp      )   CALL mpp_sum ( ialloc  )
+       IF( ialloc /= 0 )   CALL ctl_warn('dia_wri( diawri_dimg.h90) : failed to allocate eiv arrays')
+    ENDIF
+#endif
+
+    inbsel = 17
+    IF ( ln_blk_core ) inbsel = 23
+
+    IF( inbsel >  jpk) THEN
+       IF(lwp) WRITE(numout,*)  ' STOP inbsel =',inbsel,' is larger than jpk=',jpk
+       STOP
+    ENDIF
+
+    iyear = ndastp/10000
+    imon = (ndastp-iyear*10000)/100
+    iday = ndastp - imon*100 - iyear*10000
+    !     
+    !! dimg format V1.0 should start with the 4 char. string '@!01'
+    !!
+    clver='@!01'
+    !
+    IF( .NOT. ll_dia_inst ) THEN
+       !
+       !! * Mean output section
+       !! ----------------------
+       !
+       IF( kt == nit000 .AND. lwp ) WRITE(numout,*) &
+            'THE OUTPUT FILES CONTAINS THE AVERAGE OF EACH FIELD'
+       !
+       IF( kt == nit000  ) THEN
+          ! reset arrays for average computation
+          nmoyct = 0
+          !
+          um(:,:,:) = 0._wp
+          vm(:,:,:) = 0._wp
+          wm(:,:,:) = 0._wp
+          avtm(:,:,:) = 0._wp
+          tm(:,:,:) = 0._wp
+          sm(:,:,:) = 0._wp
+          fsel(:,:,:) = 0._wp
+          fselflx(:,:,:) = 0._wp
+#if defined key_diaeiv
+          umeiv(:,:,:) = 0._wp
+          vmeiv(:,:,:) = 0._wp
+          wmeiv(:,:,:) = 0._wp
+#endif
+!         IF ( lk_trabbl_dif .AND. ln_counter ) THEN
+!          ncount_bbls=0._wp
+!          ncountu_bbls=0._wp
+!          ncountv_bbls=0._wp
+!         ENDIF
+          !
+       ENDIF
+
+       !  cumulate values
+       !  ---------------
+!      IF ( lk_trabbl_dif .AND. ln_counter ) THEN
+!        ncount_bbls(:,:)  = ncount_bbls(:,:)  + ncount_bbl(:,:)
+!        ncountu_bbls(:,:) = ncountu_bbls(:,:) + ncountu_bbl(:,:)
+!        ncountv_bbls(:,:) = ncountv_bbls(:,:) + ncountv_bbl(:,:)
+!      ENDIF
+
+       nmoyct = nmoyct+1
+       !
+       um(:,:,:)=um(:,:,:) + un (:,:,:)
+       vm(:,:,:)=vm(:,:,:) + vn (:,:,:)
+       wm(:,:,:)=wm(:,:,:) + wn (:,:,:)
+       avtm(:,:,:)=avtm(:,:,:) + avt (:,:,:)
+       tm(:,:,:)=tm(:,:,:) + tsn(:,:,:,jp_tem)
+       sm(:,:,:)=sm(:,:,:) + tsn(:,:,:,jp_sal)
+       !
+       fsel(:,:,1 ) = fsel(:,:,1 ) + utau(:,:) * umask(:,:,1)
+       fsel(:,:,2 ) = fsel(:,:,2 ) + vtau(:,:) * vmask(:,:,1)
+       fsel(:,:,3 ) = fsel(:,:,3 ) + qsr (:,:) + qns  (:,:) 
+       fsel(:,:,4 ) = fsel(:,:,4 ) +  emp(:,:)
+       !        fsel(:,:,5 ) = fsel(:,:,5 ) + tsb(:,:,1,jp_tem)  !RB not used
+       fsel(:,:,6 ) = fsel(:,:,6 ) + sshn(:,:) 
+       fsel(:,:,7 ) = fsel(:,:,7 ) + qsr(:,:)
+       IF( ln_ssr ) THEN
+          IF( nn_sstr /= 0 )   fsel(:,:,8 ) = fsel(:,:,8 ) + qrp (:,:)
+          IF( nn_sssr /= 0 )   fsel(:,:,9 ) = fsel(:,:,9 ) + erp (:,:)
+       ENDIF
+       fsel(:,:,10) = fsel(:,:,10) + hmld(:,:)
+       fsel(:,:,11) = fsel(:,:,11) + hmlp(:,:)
+       fsel(:,:,12) = fsel(:,:,12) + fr_i(:,:)
+       !        fsel(:,:,13) = fsel(:,:,13)   !RB not used
+       !        fsel(:,:,14) = fsel(:,:,14) + qct(:,:)
+       !        fsel(:,:,15) = fsel(:,:,15) + fbt(:,:)
+       fsel(:,:,16) = fsel(:,:,16) + sfx(:,:)
+
+       IF (ln_blk_core ) THEN
+        fsel(:,:,21) = fsel(:,:,21) + qla(:,:)
+        fsel(:,:,22) = fsel(:,:,22) + qlw(:,:)
+        fsel(:,:,23) = fsel(:,:,23) + qsb(:,:)
+       ENDIF
+
+#if ! defined key_coupled
+       fselflx(:,:,1) = fselflx(:,:,1) - qla(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,2) = fselflx(:,:,2) + qlw(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,3) = fselflx(:,:,3) - qsb(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,4) = fselflx(:,:,4) + qsr(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,5) = fselflx(:,:,5) + qsr (:,:) + qns  (:,:) 
+       fselflx(:,:,6) = fselflx(:,:,6) + qrp (:,:) 
+       fselflx(:,:,7) = fselflx(:,:,7) + emp (:,:) *86400.
+       fselflx(:,:,8) = fselflx(:,:,8) + sfx(:,:) *86400.
+       fselflx(:,:,9) = fselflx(:,:,9) + erp (:,:) *86400.
+#endif
+       fselflx(:,:,10) = fselflx(:,:,10) + sf(jp_humi)%fnow(:,:,1)
+       fselflx(:,:,11) = fselflx(:,:,11) + (sf(jp_tair)%fnow(:,:,1) - 273.15)
+       fselflx(:,:,12) = fselflx(:,:,12) + wndm(:,:)
+       fselflx(:,:,13) = fselflx(:,:,13) + sf(jp_prec)%fnow(:,:,1)*86400.
+!      fselflx(:,:,14) = fselflx(:,:,14) + sf(jp_ccov)%fnow(:,:,1)
+!
+       IF ( ln_rnf ) THEN
+         fselflx(:,:,15) = fselflx(:,:,15) + sf_rnf(1)%fnow(:,:,1)*86400.
+       ELSE
+         fselflx(:,:,15) = 0.
+       ENDIF
+#if defined key_diaeiv
+       umeiv(:,:,:)=umeiv(:,:,:) + u_eiv (:,:,:)
+       vmeiv(:,:,:)=vmeiv(:,:,:) + v_eiv (:,:,:)
+       wmeiv(:,:,:)=wmeiv(:,:,:) + w_eiv (:,:,:)
+#endif
+       !
+       ! Output of dynamics and tracer fields and selected fields
+       ! --------------------------------------------------------
+       !
+       !
+       zdtj=rdt/86400.   ! time step in days
+       WRITE(clmode,'(f5.1,a)' ) nwrite*zdtj,' days average'
+
+       !       iwrite=NINT(adatrj/rwrite)
+       !      IF (abs(adatrj-iwrite*rwrite) < zdtj/2.      &
+
+       IF(  ( MOD (kt-nit000+1,nwrite) ==  0 )          &
+            &   .OR. ( kt == 1 .AND. ninist == 1)  ) THEN
+          ! it is time to make a dump on file 
+          ! compute average
+          um(:,:,:) = um(:,:,:) / nmoyct
+          vm(:,:,:) = vm(:,:,:) / nmoyct
+          wm(:,:,:) = wm(:,:,:) / nmoyct
+          avtm(:,:,:) = avtm(:,:,:) / nmoyct
+          tm(:,:,:) = tm(:,:,:) / nmoyct
+          sm(:,:,:) = sm(:,:,:) / nmoyct
+          !
+          fsel(:,:,:) = fsel(:,:,:) / nmoyct
+          fselflx(:,:,:) = fselflx(:,:,:) / nmoyct
+          !
+          ! note : the surface pressure is not averaged, but rather 
+          ! computed from the averaged gradients.
+          !
+!         IF ( lk_trabbl .AND. ln_counter ) THEN
+!         zbbl(:,:,1) = ncount_bbls(:,:)/nwrite *100.
+!         zbbl(:,:,2) = ncountu_bbls(:,:)/nwrite *100.
+!         zbbl(:,:,3) = ncountv_bbls(:,:)/nwrite *100.
+!         ENDIF
+#if defined key_diaeiv
+       umeiv(:,:,:)=umeiv(:,:,:)   / nmoyct
+       vmeiv(:,:,:)=vmeiv(:,:,:)   / nmoyct
+       wmeiv(:,:,:)=wmeiv(:,:,:)   / nmoyct
+#endif
+          ! mask mean field with tmask except utau vtau (1,2)
+          DO jk=3,inbsel
+            fsel(:,:,jk)=fsel(:,:,jk)*tmask(:,:,1)
+          END DO
+       ENDIF
+       !
+    ELSE   ! ll_dia_inst true
+       !
+       !! * Instantaneous output section
+       !! ------------------------------
+       !
+       IF( kt == nit000 .AND. lwp ) WRITE(numout,*) &
+            'THE OUTPUT FILES CONTAINS INSTANTANEOUS VALUES OF EACH FIELD'
+       !
+       zdtj=rdt/86400.   ! time step in days
+       !  iwrite=NINT(adatrj/rwrite)
+       clmode='instantaneous'
+       !     IF (abs(adatrj-iwrite*rwrite) < zdtj/2.  &
+       IF (  ( MOD (kt-nit000+1,nwrite) ==  0 )          &
+            &   .OR. ( kt == 1 .AND. ninist == 1)  ) THEN
+          !
+          ! transfer wp arrays to sp arrays for dimg files
+          fsel(:,:,:) = 0._wp
+          !
+          fsel(:,:,1 ) = utau(:,:) * umask(:,:,1)
+          fsel(:,:,2 ) = vtau(:,:) * vmask(:,:,1)
+          fsel(:,:,3 ) = (qsr (:,:) + qns (:,:)) * tmask(:,:,1)
+          fsel(:,:,4 ) =  emp(:,:) * tmask(:,:,1) 
+          !         fsel(:,:,5 ) = (tsb(:,:,1,jp_tem) - sf_sst(1)%fnow(:,:) ) *tmask(:,:,1) !RB not used
+
+          fsel(:,:,6 ) = sshn(:,:)
+          fsel(:,:,7 ) = qsr (:,:) * tmask(:,:,1)
+          IF( ln_ssr ) THEN
+             IF( nn_sstr /= 0 )   fsel(:,:,8 ) = qrp (:,:) * tmask(:,:,1)
+             IF( nn_sssr /= 0 )   fsel(:,:,9 ) = erp (:,:) * tmask(:,:,1)
+          ENDIF
+          fsel(:,:,10) = hmld(:,:) * tmask(:,:,1)
+          fsel(:,:,11) = hmlp(:,:) * tmask(:,:,1)
+          fsel(:,:,12) = fr_i(:,:) * tmask(:,:,1)
+          !         fsel(:,:,13) = sf_sst(1)%fnow(:,:) !RB not used
+          !         fsel(:,:,14) =  qct(:,:)
+          !         fsel(:,:,15) =  fbt(:,:)
+          fsel(:,:,16) =  sfx(:,:) * tmask(:,:,1)
+
+
+       IF (ln_blk_core ) THEN
+        fsel(:,:,21) =   qla(:,:)
+        fsel(:,:,22) =   qlw(:,:)
+        fsel(:,:,23) =   qsb(:,:)
+       ENDIF
+#if ! defined key_coupled
+       fselflx(:,:,1) = - qla(:,:) * (1.0 - fr_i(:,:)) 
+       fselflx(:,:,2) = + qlw(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,3) = - qsb(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,4) = + qsr(:,:) * (1.0 - fr_i(:,:))
+       fselflx(:,:,5) = + qsr (:,:) + qns  (:,:) 
+       fselflx(:,:,6) = + qrp (:,:)
+       fselflx(:,:,7) = + emp (:,:) *86400.
+       fselflx(:,:,8) = + sfx(:,:) *86400.
+       fselflx(:,:,9) = + erp (:,:) *86400.
+#endif
+       fselflx(:,:,10) = + sf(jp_humi)%fnow(:,:,1)
+       fselflx(:,:,11) = + (sf(jp_tair)%fnow(:,:,1) - 273.15)
+       fselflx(:,:,12) = + wndm(:,:) 
+       fselflx(:,:,13) = + sf(jp_prec)%fnow(:,:,1)*86400.
+!      fselflx(:,:,14) = + sf(jp_ccov)%fnow(:,:,1)
+       IF (ln_rnf ) THEN
+          fselflx(:,:,15) = + sf_rnf(1)%fnow(:,:,1)*86400.
+       ELSE
+          fselflx(:,:,15) = 0.
+       ENDIF
+
+       ENDIF
+    ENDIF
+    !
+    ! Opening of the datrj.out file with the absolute time in day of each dump
+    ! this file gives a record of the dump date for post processing ( ASCII file )
+    !
+    IF(  ( MOD (kt-nit000+1,nwrite) ==  0 )          &
+         &   .OR. ( kt == 1 .AND. ninist == 1 )  ) THEN
+
+       IF( lwp) WRITE(numout,*)'Days since the begining of the run :',adatrj
+
+       !! * U section
+
+       WRITE(clname,9000) TRIM(cexper),'U',iyear,imon,iday
+       cltext=TRIM(cexper)//' U(m/s) '//TRIM(clmode)
+       !
+       IF( ll_dia_inst) THEN   ;   CALL dia_wri_dimg(clname, cltext, un, jpk, 'T')
+       ELSE                    ;   CALL dia_wri_dimg(clname, cltext, um, jpk, 'T')
+       ENDIF
+
+       !! * V section
+
+       WRITE(clname,9000) TRIM(cexper),'V',iyear,imon,iday
+       cltext=TRIM(cexper)//' V(m/s) '//TRIM(clmode)
+       !
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, vn, jpk, 'T')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, vm, jpk, 'T')
+       ENDIF
+       !
+#if defined key_diaeiv
+       !! * EIV section
+       ! U_EIV
+       WRITE(clname,9000) TRIM(cexper),'UEIV',iyear,imon,iday
+       cltext=TRIM(cexper)//' UEIV(m/s) '//TRIM(clmode)
+       !
+       IF( ll_dia_inst) THEN 
+          CALL dia_wri_dimg(clname, cltext, u_eiv, jpk, 'T')
+       ELSE 
+          CALL dia_wri_dimg(clname, cltext, umeiv, jpk, 'T')
+       ENDIF
+
+       ! V_EIV
+
+       WRITE(clname,9000) TRIM(cexper),'VEIV',iyear,imon,iday
+       cltext=TRIM(cexper)//' VEIV(m/s) '//TRIM(clmode)
+       !
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, v_eiv, jpk, 'T')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, vmeiv, jpk, 'T')
+       ENDIF
+
+       ! W_EIV
+
+       WRITE(clname,9000) TRIM(cexper),'WEIV',iyear,imon,iday
+       cltext=TRIM(cexper)//' WEIV(m/s) '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, w_eiv, jpk, 'W')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, wmeiv, jpk, 'W')
+       ENDIF
+
+#endif
+
+       !! * KZ section
+
+       WRITE(clname,9000) TRIM(cexper),'KZ',iyear,imon,iday
+       cltext=TRIM(cexper)//' KZ(m2/s) '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, avt, jpk, 'W')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, avtm, jpk, 'W')
+       ENDIF
+       !
+
+       !! * W section
+
+       WRITE(clname,9000) TRIM(cexper),'W',iyear,imon,iday
+       cltext=TRIM(cexper)//' W(m/s) '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, wn, jpk, 'W')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, wm, jpk, 'W')
+       ENDIF
+
+       !! * T section
+
+       WRITE(clname,9000) TRIM(cexper),'T',iyear,imon,iday
+       cltext=TRIM(cexper)//' T (DegC) '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, tsn(:,:,:,jp_tem), jpk, 'T')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, tm               , jpk, 'T')
+       ENDIF
+       !
+
+       !! * S section
+
+       WRITE(clname,9000) TRIM(cexper),'S',iyear,imon,iday
+       cltext=TRIM(cexper)//' S (PSU) '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, tsn(:,:,:,jp_sal), jpk, 'T')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, sm, jpk, 'T')
+       ENDIF
+       !
+
+!      IF ( lk_trabbl .AND. ln_counter ) THEN
+!        !! * BBL count section
+!         WRITE(clname,9000) TRIM(cexper),'BBLC',iyear,imon,iday
+!        cltext=TRIM(cexper)//' BBL count (%) '//TRIM(clmode)
+!        CALL dia_wri_dimg(clname, cltext, zbbl, 3, 'T')
+!      ENDIF
+
+       !! * 2D section
+
+       WRITE(clname,9000) TRIM(cexper),'2D',iyear,imon,iday
+       cltext='2D fields '//TRIM(clmode)
+
+       IF( ll_dia_inst) THEN
+          CALL dia_wri_dimg(clname, cltext, fsel, inbsel, '2')
+       ELSE
+          CALL dia_wri_dimg(clname, cltext, fsel, inbsel, '2')
+       ENDIF
+
+       !! * 2DFLX section
+
+       WRITE(clname,9000) TRIM(cexper),'2DFLX',iyear,imon,iday
+       cltext='2DFLX fields '//TRIM(clmode)
+       DO jk=1,jpflx
+          fselflx(:,:,jk) = fselflx(:,:,jk) * tmask (:,:,1)
+       END DO
+       CALL dia_wri_dimg(clname, cltext, fselflx, jpflx, '2')
+       IF( lk_mpp )   CALL mppsync   ! synchronization in mpp
+
+       !! * Log message in numout 
+
+       IF( lwp)WRITE(numout,*) ' '
+       IF( lwp)WRITE(numout,*) ' **** WRITE in dimgproc file ',kt
+
+       IF( lwp .AND.        ll_dia_inst) WRITE(numout,*) '    instantaneous fields'
+       IF( lwp .AND. .NOT.  ll_dia_inst) WRITE(numout,*) '    average fields with ',nmoyct,'pdt'
+       !
+       !
+       !! * Reset cumulating arrays  and counter to 0 after writing
+       !
+       IF( .NOT. ll_dia_inst ) THEN
+          nmoyct = 0
+          !
+          um(:,:,:) = 0._wp
+          vm(:,:,:) = 0._wp
+          wm(:,:,:) = 0._wp
+          tm(:,:,:) = 0._wp
+          sm(:,:,:) = 0._wp
+          fsel(:,:,:) = 0._wp
+          fselflx(:,:,:) = 0._wp
+          avtm(:,:,:) = 0._wp
+#if defined key_diaeiv
+          umeiv(:,:,:) = 0._wp
+          vmeiv(:,:,:) = 0._wp
+          wmeiv(:,:,:) = 0._wp
+#endif
+!         IF ( lk_trabbl_dif .AND. ln_counter ) THEN
+!          ncount_bbls=0._wp
+!          ncountu_bbls=0._wp
+!          ncountv_bbls=0._wp
+!         ENDIF
+       ENDIF
+    ENDIF
+!   IF ( lk_trabbl .AND. ln_counter ) THEN
+!      CALL wrk_dealloc( jpi, jpj, 3, zbbl )
+!   ENDIF
+      
+    IF( nn_timing == 1 )   CALL timing_stop('dia_wri')
+    !
+9000 FORMAT(a,"_",a,"_y",i4.4,"m",i2.2,"d",i2.2,".dimgproc")
+
+  END SUBROUTINE dia_wri
+
+  SUBROUTINE dia_wri_state ( cdfile_name, kt)
+    !!-------------------------------------------------------------------
+    !!        ***     ROUTINE dia_wri_state  ***
+    !!
+    !! ** Purpose :   Dummy routine for compatibility with IOIPSL output
+    !!
+    !! ** History :
+    !!      9.O  ! 03-06  (J.M. Molines ) dimgout
+    !!--------------------------------------------------------------------
+    !! * Arguments
+    CHARACTER (len=*), INTENT(in)   ::   cdfile_name      ! name of the file created 
+    INTEGER          , INTENT( in ) ::   kt               ! ocean time-step index
+    !!--------------------------------------------------------------------
+
+    IF( lwp) WRITE(numout,*) 'dia_wri_state: Dummy call', cdfile_name
+    IF( lwp) WRITE(numout,*) '-------------'
+    IF( lwp) WRITE(numout,*)
+
+  END SUBROUTINE dia_wri_state

@@ -1,0 +1,61 @@
+# Occigen BULL @ CINES
+#
+# NCDF_HOME   root directory containing lib and include subdirectories for netcdf4
+# HDF5_HOME   root directory containing lib and include subdirectories for HDF5
+# XIOS_HOME   root directory containing lib for XIOS
+# OASIS_HOME  root directory containing lib for OASIS
+#
+# NCDF_INC    netcdf4 include file
+# NCDF_LIB    netcdf4 library
+# XIOS_INC    xios include file    (taken into accound only if key_iomput is activated)
+# XIOS_LIB    xios library         (taken into accound only if key_iomput is activated)
+# OASIS_INC   oasis include file   (taken into accound only if key_oasis3 is activated)
+# OASIS_LIB   oasis library        (taken into accound only if key_oasis3 is activated)
+#
+# FC          Fortran compiler command
+# FCFLAGS     Fortran compiler flags
+# FFLAGS      Fortran 77 compiler flags
+# LD          linker
+# LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries
+# FPPFLAGS    pre-processing flags
+# AR          assembler
+# ARFLAGS     assembler flags
+# MK          make
+# USER_INC    complete list of include files
+# USER_LIB    complete list of libraries to pass to the linker
+#
+# Note that:
+#  - unix variables "$..." are accpeted and will be evaluated before calling fcm.
+#  - fcm variables are starting with a % (and not a $)
+#
+#
+#
+#setenv		 NETCDF_INC_DIR /opt/software/libraries/netcdf/netcdf-4.2.1.1/include 
+#setenv		 NETCDF_LIB_DIR /opt/software/libraries/netcdf/netcdf-4.2.1.1/lib 
+
+%NCDF_HOME           $NETCDFHOME
+%NCDF_HOME_FORTRAN   $NETCDFFHOME
+%HDF5_HOME           $NETCDFFHOME
+%XIOS_HOME           $WORKDIR/DEV/xios-1.0-rev703
+%OASIS_HOME          $WORKDIR/now/models/oa3mct
+
+%NCDF_INC            -I$NETCDF_INCDIR -I$NETCDFF_INCDIR
+%NCDF_LIB            $_NETCDF_LDFLAGS $NETCDFF_LDFLAGS
+%XIOS_INC            -I%XIOS_HOME/inc
+%XIOS_LIB            -L%XIOS_HOME/lib -lxios
+%OASIS_INC           -I%OASIS_HOME/build/lib/mct -I%OASIS_HOME/build/lib/psmile.MPI1
+%OASIS_LIB           -L%OASIS_HOME/lib -lpsmile.MPI1 -lmct -lmpeu -lscrip
+
+%CPP                 cpp
+%FC                  mpif90 -c -cpp
+%FCFLAGS             -i4 -r8 -O2  -fno-alias -fp-model precise  
+#%FCFLAGS             -i4 -r8 -O0 -fp-model precise  -ftrapuv -fpe0 -traceback -g -CB
+%FFLAGS              %FCFLAGS
+%LD                   mpif90
+%LDFLAGS             -lstdc++
+%FPPFLAGS            -P -C -traditional
+%AR                  ar
+%ARFLAGS             rs
+%MK                  gmake
+%USER_INC            %XIOS_INC %OASIS_INC %NCDF_INC
+%USER_LIB            %XIOS_LIB %OASIS_LIB %NCDF_LIB
