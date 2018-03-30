@@ -20,4 +20,5 @@ This configuration is based on rev_6355 of NEMO_v3_STABLE branch and was operate
 * bathymetry : ```NATL60_bathymeter_zps_gebco_v4.nc```
 * coordinates : ```NATL60_coordinates_v4.nc```
 * ice initialization : ```Init_Ice_GLORYS1V1_NSIDC_BOOTSTRAP_y1989m01_new.nc```
-  
+
+Acces to run-time files can be made available on request.
