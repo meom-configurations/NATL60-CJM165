@@ -9,11 +9,11 @@ This configuration is based on rev_6355 of NEMO_v3_STABLE branch and was operate
 ## Description of the repository:
   This repository holds all the information needed to build the numerical code used for NATL60-CJM165 configuration, from the reference versions indicated above.
   
-  It provides the ```CONFIG``` directory to be used for NATL60-CJM165:
+  It provides the ```CONFIG/NATL60-CJM165``` directory to be used for NATL60-CJM165:
   
-* ```CONFIG/ ``` : fcm files for cpp and compilation options.
-* ```CONFIG/MY_SRC/``` : fortran code differing from the reference NEMO code.
-* ```CONFIG/EXP00/``` : namelist files (ocean, ice and top), xml files for xios output.
+* ```CONFIG/NATL60-CJM165 ``` : fcm files for cpp and compilation options.
+* ```CONFIG/NATL60-CJM165/MY_SRC/``` : fortran code differing from the reference NEMO code.
+* ```CONFIG/NATL60-CJM165/EXP00/``` : namelist files (ocean, ice and top), xml files for xios output.
 
 ## Run-time files:
   Most of the run-time files are indicated in the namelist files, except for :
