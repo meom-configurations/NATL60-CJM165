@@ -7,7 +7,7 @@ This configuration is based on rev_6355 of NEMO_v3_STABLE branch and was operate
 ```svn co -r 703 http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/branchs/xios-1.0```
 
 ## Description of the repository:
-  This repository hold all the information needed to build the numerical code used for NATL60-CJM165 configuration, from the reference versions indicated above.
+  This repository holds all the information needed to build the numerical code used for NATL60-CJM165 configuration, from the reference versions indicated above.
   
   It provides the ```CONFIG``` directory to be used for NATL60-CJM165:
   
