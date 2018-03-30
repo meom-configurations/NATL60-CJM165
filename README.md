@@ -6,9 +6,18 @@ This configuration is based on rev_6355 of NEMO_v3_STABLE branch and was operate
 
 ```svn co -r 703 http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/branchs/xios-1.0```
 
-## Organisation of the repository
-In the CONFIG directory we give the NATL60-CJM165 holding the needed fcm files (cpp and arch) and  classical  MY_SRC/ and EXP00/ sub-directories.
-
-  MY_SRC holds fortran modules modified with respect to the reference NEMO code
+## Description of the repository:
+  This repository hold all the information needed to build the numerical code used for NATL60-CJM165 configuration, from the reference versions indicated above.
   
-  EXP00 holds namelist for the ocean an ice, as well as the xml files suitable for XIOS output.
+  It provides the ```CONFIG``` directory to be used for NATL60-CJM165:
+  
+* ```CONFIG/ ``` : fcm files for cpp and compilation options.
+* ```CONFIG/MY_SRC/``` : fortran code differing from the reference NEMO code.
+* ```CONFIG/EXP00/``` : namelist files (ocean, ice and top), xml files for xios output.
+
+## Run-time files:
+  Most of the run-time files are indicated in the namelist files, except for :
+* bathymetry : ```NATL60_bathymeter_zps_gebco_v4.nc```
+* coordinates : ```NATL60_coordinates_v4.nc```
+* ice initialization : ```Init_Ice_GLORYS1V1_NSIDC_BOOTSTRAP_y1989m01_new.nc```
+  
